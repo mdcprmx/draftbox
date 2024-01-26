@@ -15,18 +15,17 @@ int main(int argc, char *argv[])
 {
     char buffer[BUFFER_SIZE];  // 1. create buffer
     int filename_arg = 0;      // 2. create fd (like creating a FILE *f)
-    ssize_t bytes_length;      // 3. create  
 
-    // getopt is placed somewhere there.
 
     // Use case One - with a file //
     // 4.1 - if arguments exist.
-    if (argc >1 )   // if second argument exists (first argument is always an executable name btw) do: 
+    if (argc > 1)   // if second argument exists (first argument is always an executable name btw) do: 
     {
         arguments_parser(argc, **argv);
         filename_arg = open(argv[1], O_RDONLY); // tries to open a file
         scenario_file_doesnt_exist(filename_arg); // if filename is written wrong (or it doesnt exist), prints error
         
+        ssize_t bytes_length;
         while ((bytes_length = read(filename_arg, buffer, BUFFER_SIZE))) // while loop, that works until var "bytes_length" is matching number of chars that are schitanni
         {
         write(STDOUT_FILENO, buffer, bytes_length); // printf basically
