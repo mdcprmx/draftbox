@@ -4,21 +4,21 @@
 
 int main(int argc, char** argv)
 {
-    int counter;
+    int choice_buffer;
     int dig_opt = 0;
 
     while (1)
     {
-        int current_option = optind ? optind : 1;
-        // int current_option;
-        // if (optind == optind)
-        // {
-        //     current_option = optind;
-        // }
-        // else
-        // {
-        //     current_option = 1;
-        // }
+        // int current_option = optind ? optind : 1;
+        int current_option;
+        if (optind == optind)
+        {
+            current_option = optind;
+        }
+        else
+        {
+            current_option = 1;
+        }
         int option_index = 0;
 
         static struct option long_options[] = {
@@ -31,10 +31,10 @@ int main(int argc, char** argv)
             {0,         0,                    0,  0 },
         };
 
-        counter = getopt_long(argc, argv, "abc:d:012", long_options, &option_index);
-        if ( counter == -1) break;
+        choice_buffer = getopt_long(argc, argv, "abc:d:012", long_options, &option_index);
+        if (choice_buffer == -1) break;
 
-        switch (counter)
+        switch (choice_buffer)
         {
             case 0:
             printf("option %s", long_options[option_index].name);
@@ -50,7 +50,7 @@ int main(int argc, char** argv)
                 else
                 {
                     dig_opt = current_option;
-                    printf("option %c\n", counter);
+                    printf("option %c\n", choice_buffer);
                     break;
                 }
 
@@ -73,7 +73,7 @@ int main(int argc, char** argv)
                 break;
 
             default:
-                printf("?? error, getopt returned char code 0%o ??\n", counter);
+                printf("?? error, getopt returned char code 0%o ??\n", choice_buffer);
 
         }
     }

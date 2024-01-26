@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-#define BUFFER_SIZE 255
+#define BUFFER_SIZE 1024
 
 void scenario_file_doesnt_exist(int file_descr);
 void scenario_no_arguments();
@@ -13,8 +13,10 @@ void arguments_parser(int argc, char **argv);
 //////////////////
 int main(int argc, char *argv[])
 {
-    char buffer[BUFFER_SIZE];  // 1. create buffer
-    int filename_arg = 0;      // 2. create fd (like creating a FILE *f)
+    const char *options_short = "benstAETuv";
+
+    char buffer[BUFFER_SIZE];  
+    int filename_arg = 0;      
 
 
     // Use case One - with a file //
