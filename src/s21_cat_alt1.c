@@ -5,11 +5,12 @@
 
 #define BUFFER_SIZE 255
 
-
 void scenario_file_doesnt_exist(int file_descr);
+void scenario_stdin_to_stdout();
 void arguments_parser(int argc, char **argv);
 
-
+//////////////////
+//////////////////
 int main(int argc, char *argv[])
 {
     char buffer[BUFFER_SIZE];  // 1. create buffer
@@ -30,6 +31,8 @@ int main(int argc, char *argv[])
         {
         write(STDOUT_FILENO, buffer, bytes_length); // printf basically
         }
+
+    close(filename_arg);
     }
     // Use case One end. //
 
@@ -40,19 +43,24 @@ int main(int argc, char *argv[])
     // 4.2 - if no arguments are present.
     else
     {
-        char usr_inpt_buffer[BUFFER_SIZE];
-        scanf("%255[^\n]", usr_inpt_buffer);
-        printf("%s\n", usr_inpt_buffer);
+        scenario_stdin_to_stdout();
     }
     // Use case Two end. //
 
-    close(filename_arg);
     return 0;
 
 }
+//////////////////
+//////////////////
 
 
 
+void scenario_stdin_to_stdout()
+{
+    char usr_inpt_buffer[BUFFER_SIZE];
+    scanf("%255[^\n]", usr_inpt_buffer);
+    printf("%s\n", usr_inpt_buffer);
+}
 
 
 
