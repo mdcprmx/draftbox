@@ -10,7 +10,7 @@ void scenario_file_doesnt_exist(int file_descr);
 void scenario_no_arguments();
 void scenario_file_print(int filename);
 void funct_arguments_parser(int argc, char **argv);
-int funct_open_file(int argc, char **argv);
+int funct_open_file(int argc, char **argv, FILE* fname);
 
 
 
@@ -25,8 +25,7 @@ int main(int argc, char *argv[])
     if (argc > 1)   // if second argument exists (first(0th) argument is always an executable name btw) do: 
     {
         // funct_arguments_parser(argc, argv);
-        filename = funct_open_file(argc, argv); // tries to open a file // btw, FIX THIS! IT MUST LOOK FOR FILENAME, not just take argv[1], cuz there could be a flag
-        scenario_file_doesnt_exist(filename); // checks if it exist or not
+        funct_open_file(argc, argv, filename); // tries to open a file // btw, FIX THIS! IT MUST LOOK FOR FILENAME, not just take argv[1], cuz there could be a flag
         scenario_file_print(filename);
         
     }
@@ -42,20 +41,20 @@ int main(int argc, char *argv[])
 
 
 
-int funct_open_file(int argc, char **argv)
+int funct_open_file(int argc, char **argv, FILE* fname)
 {
-    int fof_buffer;
-
     for (int i = 1; i < argc ; i++ )
     {
-        char for_buffer;
-          // okay, so I need to access argv, and read it.
-          // if there are '-' - it means that it's a flag
-          // how? well... duh... will think later
-        getc(for_buffer);
-        if (for_buffer == '-');
+        fname = fopen(argv[i], "r");
+        if (fname != NULL)
+        {   
+            break;
+        }
     }
 
+
+
+  
     fof_buffer = open(argv[1], O_RDONLY);
 
     return fof_buffer;
@@ -87,15 +86,6 @@ void scenario_no_arguments()
 }
 
 
-
-void scenario_file_doesnt_exist(int file_descr)
-{
-if (file_descr == -1)   // if file_desc couldn't open anything it will return -1, do: 
-    {
-        printf("File does not exist.\n");
-        exit(EXIT_FAILURE);
-    }
-}
 
 
 void funct_arguments_parser(int argc,char **argv)
