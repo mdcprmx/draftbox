@@ -1,15 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <fcntl.h>
 #include <getopt.h>
 
 #define BUFFER_SIZE 2048
 
-
-void scenario_file_print(int filename);
 int funct_open_file(int argc, char **argv, FILE* fname);
-
 
 //////////////////
 //////////////////
@@ -21,15 +17,17 @@ int main(int argc, char *argv[])
     // if arguments exist.
     if (argc > 1)   // if second argument exists (first(0th) argument is always an executable name btw) do: 
     {
-        // funct_arguments_parser(argc, argv);
-        funct_open_file(argc, argv, filename); // tries to open a file // btw, FIX THIS! IT MUST LOOK FOR FILENAME, not just take argv[1], cuz there could be a flag
-        // scenario_file_print(filename);
-        
+        funct_open_file(argc, argv, filename); 
+
+        // if (filename != NULL && filename != 'nil')
+        // fclose(filename);
+    
     }
     
     else
     printf("no arguments bruddah\n");
 
+    fclose(filename);
     return 0;
 }
 //////////////////
@@ -51,16 +49,4 @@ int funct_open_file(int argc, char **argv, FILE* fname)
     }
 
 }
-
-
-// void scenario_file_print(int filename)
-// {  
-//     ssize_t bytes_length;
-//     while ((bytes_length = read(filename, buffer, BUFFER_SIZE))) // function "read" returns number of bytes that were read.
-//     {
-//         write(STDOUT_FILENO, buffer, bytes_length);                  // so it writes the exact number of bytes that func "read" returned.
-//     }
-//     close(filename);
-// }
-
 
