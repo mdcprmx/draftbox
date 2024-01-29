@@ -7,31 +7,26 @@
 
 void scenario_open_file(int argc, char **argv, FILE* fname);
 void scenario_no_arguments();
-void check_file_doesnt_exist(FILE *fname_c);
 void funct_file_print(FILE *fname_b);
 void funct_arguments_parser(int argc, char **argv);
+void check_file_doesnt_exist(FILE *fname_c);
 
 
 //////////////////
 //////////////////
 int main(int argc, char *argv[])
 {
-
-    char buffer[BUFFER_SIZE];
     FILE *filename;
 
     // if arguments exist.
     if (argc > 1)   // if second argument exists (first(0th) argument is always an executable name btw) do: 
     {
         // funct_arguments_parser(argc, argv);
-        scenario_open_file(argc, argv, filename); // tries to open a file 
-        // check_file_doesnt_exist(filename);
-        //fclose(filename);
+        scenario_open_file(argc, argv, filename);
     }
 
     // if no arguments are present.
     else scenario_no_arguments();  // imitates cat behavior with no args
-    
     
     return 0;
 }
@@ -49,14 +44,8 @@ void scenario_open_file(int argc, char **argv, FILE *fname)
         }
     }
 
-
-    if (fname == 0)  // yeah, not 'NULL', it is '0'
-    {
-        printf("Error, couldn't open a file\n");
-        exit(1);
-    }
-
-    else 
+    check_file_doesnt_exist(fname);
+   
     funct_file_print(fname);
 }
 
@@ -86,12 +75,13 @@ void scenario_no_arguments()
 }
 
 void check_file_doesnt_exist(FILE *fname_c)
-{  // WIP, need to finish
-    if (fname_c != NULL) 
+{
+    if (fname_c == 0)  // yeah, not 'NULL', it is '0'
     {
-        printf("Error, couldn't open a file.\n");
+        printf("Error, couldn't open a file\n");
         exit(1);
     }
+
 }
 
 
