@@ -10,7 +10,6 @@ void scenario_no_arguments();
 void funct_file_print(FILE *fname_b);
 void funct_arguments_parser(int argc, char **argv);
 void check_file_exist(FILE *fname_c);
-void funct_file_open(int argc, char **argv, FILE *fname);
 
 
 //////////////////
@@ -34,11 +33,19 @@ int main(int argc, char *argv[])
 
 void scenario_open_file(int argc, char **argv)
 {
-    FILE *fname = NULL;
-    
-    funct_file_open(argc, argv, fname);
-    // check_file_exist(fname);
-    // funct_arguments_parser(argc, argv);
+    funct_arguments_parser(argc, argv);
+
+    FILE *fname;
+    for (int i = 0; i < argc ; i++ )    // depends of arg counter.
+    {
+        fname = fopen(argv[i], "r+");
+        if (fname != NULL)              // if fopen returns anything that is not NULL, it means that fopen have opened a file.
+        {                               // so we break the cycle. 
+            break;                      // tho, there is no scenario for multiple files.. so.. yeah =(
+        }
+    }
+
+    check_file_exist(fname);
     funct_file_print(fname);
 }
 
@@ -54,20 +61,6 @@ void funct_file_print(FILE *fname)
     fclose(fname);
 
 }
-
-void funct_file_open(int argc, char **argv, FILE *fname)
-{
-    for (int i = 0; i < argc ; i++ )    // depends of arg counter.
-    {
-        fname = fopen(argv[i], "r+");
-        if (fname != NULL)              // if fopen returns anything that is not NULL, it means that fopen have opened a file.
-        {                               // so we break the cycle. 
-            break;                      // tho, there is no scenario for multiple files.. so.. yeah =(
-        }
-    }
-    printf("funct_file_open done!\n");
-}
-
 void scenario_no_arguments()
 {
     char usr_inpt_buffer[BUFFER_SIZE];
@@ -186,7 +179,8 @@ void funct_arguments_parser(int argc,char **argv)
                 break;
 
             case '?':
-                printf("error, valid flags are [-benstAETuv]");
+                printf("error, valid flags are [-benstAETuv]\n");
+                exit(1);
 
         }
     }
