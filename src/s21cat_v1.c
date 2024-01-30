@@ -9,7 +9,7 @@ void scenario_open_file(int argc, char **argv, FILE* fname);
 void scenario_no_arguments();
 void funct_file_print(FILE *fname_b);
 void funct_arguments_parser(int argc, char **argv);
-void check_file_doesnt_exist(FILE *fname_c);
+void check_ifFileExist(FILE *fname_c);
 
 
 //////////////////
@@ -44,7 +44,7 @@ void scenario_open_file(int argc, char **argv, FILE *fname)
         }
     }
 
-    check_file_doesnt_exist(fname);
+    check_ifFileExist(fname);
 
     funct_arguments_parser(argc, argv);
 
@@ -69,13 +69,14 @@ void scenario_no_arguments()
 
     while (1)
     {
-    scanf("%2047s", usr_inpt_buffer);
+    scanf("%2000[^\n]s", usr_inpt_buffer);
     printf("%s\n", usr_inpt_buffer);
     break; // WIP
-    }
+   }
+
 }
 
-void check_file_doesnt_exist(FILE *fname_c)
+void check_ifFileExist(FILE *fname_c)
 {
     if (fname_c == 0)  // yeah, not 'NULL', it is '0'
     {
