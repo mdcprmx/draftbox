@@ -21,7 +21,8 @@ int main(int argc, char *argv[])
 
 void scenario_open_file(int argc, char **argv)
 {
-    funct_arguments_parser(argc, argv);
+    flag_config opt_switcher = {0};
+    funct_arguments_parser(argc, argv, &opt_switcher);
 
     FILE *fname;
     for (int i = 0; i < argc ; i++ )    // depends of arg counter.
@@ -39,7 +40,7 @@ void scenario_open_file(int argc, char **argv)
 
 void funct_file_print(FILE *fname)
 {
-    char ch_buffer;
+    char ch_buffer; 
     ch_buffer = fgetc(fname);
     while (ch_buffer != EOF)
     {
@@ -60,7 +61,7 @@ void check_file_exist(FILE *fname_c)
 
 }
 
-void funct_arguments_parser(int argc,char **argv)
+void funct_arguments_parser(int argc, char **argv, flag_config *opt_switcher)
 {
     const char *short_opt = "beEnstTv";
     int buffer_w_flag;
@@ -70,38 +71,46 @@ void funct_arguments_parser(int argc,char **argv)
         switch (buffer_w_flag)
         {
             case 'b':
+                opt_switcher->b_flag = 0;
                 printf("b flag is on\n");
                 break;
             case 'e':
+                opt_switcher->e_flag = 1;
                 printf("e flag is on\n");
                 break;
 
             case 'n':
+                opt_switcher->n_flag = 1;
                 printf("n flag is on\n");
                 break;
 
             case 's':
+                opt_switcher->s_flag = 1;
                 printf("s flag is on\n");
                 break;
 
             case 't':
+                opt_switcher->t_flag = 1;
                 printf("t flag is on\n");
                 break;
 
             case 'E':
+                opt_switcher->E_flag = 1;
                 printf("E flag is on\n");
                 break;
 
             case 'T':
+                opt_switcher->T_flag = 1;
                 printf("T flag is on\n");
                 break;
 
             case 'v':
+                opt_switcher->v_flag = 1;
                 printf("v flag is on\n");
                 break;
 
             case '?':
-                printf("Error, valid flags are [-benstAETuv]\n");
+                printf("Error, valid flags are [-benstETuv]\n");
                 exit(1);
         }
     }

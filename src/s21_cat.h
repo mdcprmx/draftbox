@@ -1,3 +1,6 @@
+#ifndef S21_CAT_LIB
+#define S21_CAT_LIB
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -8,7 +11,6 @@
 void scenario_open_file(int argc, char **argv);
 void scenario_no_arguments();
 void check_file_exist(FILE *fname_c);
-void funct_arguments_parser(int argc, char **argv);
 void funct_file_print(FILE *fname_b);
 
 // this struct is part of getopt.h, it must remain constant
@@ -25,3 +27,18 @@ const struct option long_opt[] =
 {0,                                 0, 0,   0}
 };
 
+
+typedef struct {
+    int b_flag;
+    int e_flag;
+    int n_flag;
+    int s_flag;
+    int t_flag;
+    int E_flag;
+    int T_flag;
+    int v_flag;
+} flag_config;
+
+void funct_arguments_parser(int argc, char **argv, flag_config *opt_switcher);
+
+#endif // S21_CAT_LIB

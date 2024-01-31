@@ -1,0 +1,10 @@
+
+switch_struct switcher_opt;
+switcher_opt->b_flag = 0;
+switcher_opt.e_flag = 0;
+switcher_opt.n_flag = 0;
+switcher_opt.s_flag = 0;
+switcher_opt.t_flag = 0;
+switcher_opt.E_flag = 0;
+switcher_opt.T_flag = 0;
+switcher_opt.v_flag = 0;
