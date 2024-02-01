@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <getopt.h>
+#include <string.h>
 
 #define BUFFER_SIZE 2048
 #define MEM_ALLOC_SIZE 10000

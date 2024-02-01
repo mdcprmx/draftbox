@@ -27,11 +27,8 @@ void scenario_open_file(int argc, char **argv)
     FILE *fname;
     for (int i = 0; i < argc ; i++ )    // depends of arg counter.
     {
-        fname = fopen(argv[i], "r+");
-        if (fname != NULL)              // if fopen returns anything that is not NULL, it means that fopen have opened a file.
-        {                               // so we break the cycle. 
-            break;                      // tho, there is no scenario for multiple files.. so.. yeah =(
-        }
+        fname = fopen(argv[i], "r");    // tries to open a file 
+        if (fname != NULL) break;       // if fopen returns NULL - it didnt open a file.
     }
 
     check_file_exist(fname);
@@ -40,20 +37,27 @@ void scenario_open_file(int argc, char **argv)
 
 void funct_file_print(FILE *fname, flag_config *opt_state)
 {
-    char **output_for_user_buffer = malloc (sizeof(char) * MEM_ALLOC_SIZE);
-    check_memory_allocation(output_for_user_buffer);
-    
-    char ch_buffer;
+    // char **output_for_user_buffer = malloc (sizeof(char) * MEM_ALLOC_SIZE);
+    // check_memory_allocation(output_for_user_buffer);
+
+    char ch_buffer = 0;
     ch_buffer = fgetc(fname);
     
     while (ch_buffer != EOF)
     {
         printf("%c", ch_buffer);
         ch_buffer = fgetc(fname);
+        
+    //     if (opt_state->n_flag != 0)
+    //     {
+    //         int line_counter = 0;
+    //         printf("%6d\t", line_counter); 
+    //         line_counter++;
+    //     }
     }
 
     fclose(fname);
-    free(output_for_user_buffer);
+    // free(output_for_user_buffer);
 }
 
 void check_memory_allocation(char **ofu_buffer)
@@ -76,7 +80,7 @@ void check_file_exist(FILE *fname_c)
 
 void funct_arguments_parser(int argc, char **argv, flag_config *opt_switcher)
 {
-    const char *short_opt = "beEnstTv";
+    const char *short_opt = "+beEnstTv";
     int buffer_w_flag;
     
     while ((buffer_w_flag = getopt_long(argc, argv, short_opt, long_opt, NULL )) != -1)
@@ -84,12 +88,13 @@ void funct_arguments_parser(int argc, char **argv, flag_config *opt_switcher)
         switch (buffer_w_flag)
         {
             case 'b':
-                opt_switcher->b_flag = 0;
+                opt_switcher->b_flag = 1;
                 printf("b flag is on\n");
                 break;
 
             case 'e':
                 opt_switcher->e_flag = 1;
+                opt_switcher->v_flag = 1;
                 printf("e flag is on\n");
                 break;
 
@@ -105,6 +110,7 @@ void funct_arguments_parser(int argc, char **argv, flag_config *opt_switcher)
 
             case 't':
                 opt_switcher->t_flag = 1;
+                opt_switcher->v_flag = 1;
                 printf("t flag is on\n");
                 break;
 
@@ -123,7 +129,7 @@ void funct_arguments_parser(int argc, char **argv, flag_config *opt_switcher)
                 printf("v flag is on\n");
                 break;
 
-            case '?':
+            default:
                 printf("Error, valid flags are [-benstETuv]\n");
                 exit(1);
         }
