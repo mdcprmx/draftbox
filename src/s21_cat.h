@@ -11,7 +11,7 @@
 #define MEM_ALLOC_SIZE 10000
 
 // this struct is part of getopt.h, it must remain constant
-const struct option long_opt[] = 
+const struct option LONG_OPT[] = 
 {
 {"number-nonblank",       no_argument, 0, 'b'},
 {0,                       no_argument, 0, 'e'},
@@ -21,6 +21,7 @@ const struct option long_opt[] =
 {0,                       no_argument, 0, 't'},
 {"show-tabs",             no_argument, 0, 'T'},
 {"show-nonprinting",      no_argument, 0, 'v'},
+{"help",                  no_argument, 0, 'h'},
 {0,                                 0, 0,   0}
 };
 
@@ -36,11 +37,13 @@ typedef struct {
     int v_flag;
 } flag_config;
 
-void funct_arguments_parser(int argc, char **argv, flag_config *opt_switcher);
 void scenario_open_file(int argc, char **argv);
 void scenario_no_arguments();
-void check_file_exist(FILE *fname_c);
+void funct_arguments_parser(int argc, char **argv, flag_config *opt_switcher);
 void funct_file_print(FILE *fname, flag_config *opt_state);
 void check_memory_allocation(char **ofu_buffer);
+void check_file_exist(FILE *fname_c);
+void error_usage_print();
+void error_help_print();
 
 #endif // S21_CAT_LIB
