@@ -7,11 +7,7 @@
 #include <getopt.h>
 
 #define BUFFER_SIZE 2048
-
-void scenario_open_file(int argc, char **argv);
-void scenario_no_arguments();
-void check_file_exist(FILE *fname_c);
-void funct_file_print(FILE *fname_b);
+#define MEM_ALLOC_SIZE 10000
 
 // this struct is part of getopt.h, it must remain constant
 const struct option long_opt[] = 
@@ -27,7 +23,7 @@ const struct option long_opt[] =
 {0,                                 0, 0,   0}
 };
 
-
+// struct for flag switching (0 or 1)
 typedef struct {
     int b_flag;
     int e_flag;
@@ -40,5 +36,10 @@ typedef struct {
 } flag_config;
 
 void funct_arguments_parser(int argc, char **argv, flag_config *opt_switcher);
+void scenario_open_file(int argc, char **argv);
+void scenario_no_arguments();
+void check_file_exist(FILE *fname_c);
+void funct_file_print(FILE *fname, flag_config *opt_state);
+void check_memory_allocation(char **ofu_buffer);
 
 #endif // S21_CAT_LIB

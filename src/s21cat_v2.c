@@ -35,20 +35,34 @@ void scenario_open_file(int argc, char **argv)
     }
 
     check_file_exist(fname);
-    funct_file_print(fname);
+    funct_file_print(fname, &opt_switcher);
 }
 
-void funct_file_print(FILE *fname)
+void funct_file_print(FILE *fname, flag_config *opt_state)
 {
-    char ch_buffer; 
+    char **output_for_user_buffer = malloc (sizeof(char) * MEM_ALLOC_SIZE);
+    check_memory_allocation(output_for_user_buffer);
+    
+    char ch_buffer;
     ch_buffer = fgetc(fname);
+    
     while (ch_buffer != EOF)
     {
         printf("%c", ch_buffer);
         ch_buffer = fgetc(fname);
     }
-    fclose(fname);
 
+    fclose(fname);
+    free(output_for_user_buffer);
+}
+
+void check_memory_allocation(char **ofu_buffer)
+{
+    if(ofu_buffer == NULL)
+    {
+        printf("Allocating memory failed.\n");
+        exit(1);
+    }
 }
 
 void check_file_exist(FILE *fname_c)
@@ -58,7 +72,6 @@ void check_file_exist(FILE *fname_c)
         printf("Error, couldn't open a file\n");
         exit(1);
     }
-
 }
 
 void funct_arguments_parser(int argc, char **argv, flag_config *opt_switcher)
@@ -74,6 +87,7 @@ void funct_arguments_parser(int argc, char **argv, flag_config *opt_switcher)
                 opt_switcher->b_flag = 0;
                 printf("b flag is on\n");
                 break;
+
             case 'e':
                 opt_switcher->e_flag = 1;
                 printf("e flag is on\n");
@@ -115,14 +129,6 @@ void funct_arguments_parser(int argc, char **argv, flag_config *opt_switcher)
         }
     }
 }
-
-
-
-
-
-
-
-
 
 void scenario_no_arguments()
 {
