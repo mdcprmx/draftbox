@@ -43,6 +43,7 @@ void funct_arguments_parser(int argc, char **argv, flag_config *opt_switcher);
 void funct_file_print(FILE *fname, flag_config *opt_state);
 void check_memory_allocation(char **ofu_buffer);
 void check_file_exist(FILE *fname_c);
+void text_squeeze(FILE* fname_b);
 void error_usage_print();
 void error_help_print();
 

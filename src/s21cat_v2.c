@@ -35,16 +35,24 @@ void scenario_open_file(int argc, char **argv)
     funct_file_print(fname, &opt_switcher);
 }
 
-void funct_file_print(FILE *fname, flag_config *opt_state)
+void funct_file_print(FILE *fname_a, flag_config *opt_state)
 {
     char ch_previous_buffer = '\n';
-    char ch_current_buffer = fgetc(fname);
+    char ch_current_buffer = fgetc(fname_a);
     
     while (ch_current_buffer != EOF)
     {
         putc(ch_current_buffer, stdout);
-        ch_current_buffer = fgetc(fname);
-        
+        ch_current_buffer = fgetc(fname_a);
+
+        // soo this doesnt works. function doesnt works too. FIX THISSS
+        if (opt_state->s_flag && ch_previous_buffer == '\n' && ch_current_buffer == '\n')
+        {
+            text_squeeze(fname_a);
+        }
+
+
+
         // if (opt_state->n_flag != 0)
         // {
         //     int line_counter = 0;
@@ -53,13 +61,18 @@ void funct_file_print(FILE *fname, flag_config *opt_state)
         // }
     }
 
-    fclose(fname);
+    fclose(fname_a);
 }
 
-// void process_text_squeeze()
-// {
-
-// }
+void text_squeeze(FILE* fname_b)
+{
+    char ch_crnt_bfr = fgetc(fname_b);
+    while (ch_crnt_bfr = '\n')
+    {
+        ch_crnt_bfr = fgetc(fname_b);
+    }
+    ungetc(ch_crnt_bfr, fname_b);
+}
 
 void check_memory_allocation(char **ofu_buffer)
 {
