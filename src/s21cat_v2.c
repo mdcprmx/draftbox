@@ -37,27 +37,29 @@ void scenario_open_file(int argc, char **argv)
 
 void funct_file_print(FILE *fname, flag_config *opt_state)
 {
-    // char **output_for_user_buffer = malloc (sizeof(char) * MEM_ALLOC_SIZE);
-    // check_memory_allocation(output_for_user_buffer);
-
-    char ch_buffer = fgetc(fname);
+    char ch_previous_buffer = '\n';
+    char ch_current_buffer = fgetc(fname);
     
-    while (ch_buffer != EOF)
+    while (ch_current_buffer != EOF)
     {
-        putc(ch_buffer, stdout);
-        ch_buffer = fgetc(fname);
+        putc(ch_current_buffer, stdout);
+        ch_current_buffer = fgetc(fname);
         
-    //     if (opt_state->n_flag != 0)
-    //     {
-    //         int line_counter = 0;
-    //         printf("%6d\t", line_counter); 
-    //         line_counter++;
-    //     }
+        // if (opt_state->n_flag != 0)
+        // {
+        //     int line_counter = 0;
+        //     printf("%6d\t", line_counter); 
+        //     line_counter++;
+        // }
     }
 
     fclose(fname);
-    // free(output_for_user_buffer);
 }
+
+// void process_text_squeeze()
+// {
+
+// }
 
 void check_memory_allocation(char **ofu_buffer)
 {
@@ -80,12 +82,10 @@ void check_file_exist(FILE *fname_c)
 void funct_arguments_parser(int argc, char **argv, flag_config *opt_switcher)
 {
     const char *SHORT_OPT = "+beEnstTvh";
-    char buffer_w_flag;
-    
+    char buffer_w_flag = getopt_long(argc, argv, SHORT_OPT, LONG_OPT, 0);
+
     while (buffer_w_flag != -1)
     {
-        buffer_w_flag = getopt_long(argc, argv, SHORT_OPT, LONG_OPT, NULL );
-
         switch (buffer_w_flag)
         {
             case 'b':
@@ -130,13 +130,19 @@ void funct_arguments_parser(int argc, char **argv, flag_config *opt_switcher)
                 printf("v flag is on\n");
                 break;
 
-            case 'h':
+            case '0':
                 error_help_print();
+                break;
 
             case '?':
-            default:
                 error_usage_print();
+                break;
+
+            default:
+                error_help_print();
         }
+
+    buffer_w_flag = getopt_long(argc, argv, SHORT_OPT, LONG_OPT, 0);
     }
 }
 
@@ -154,13 +160,13 @@ void scenario_no_arguments()
 
 void error_usage_print()
 {
-    printf("Error, usage: [FLAG] [FILE_NAME] || short flags are [-benstETuv]\n");
+    printf("Error, invalid flag | Usage: [FLAG] [FILE_NAME] | flags are [-benstETuv]\n");
     exit(EXIT_FAILURE);
 }
 
 void error_help_print()
 {
-    printf("CAT usage: [FLAG] [FILE_NAME] || short flags are [-benstETuv]\n\n");
+    printf("CAT usage: [FLAG] [FILE_NAME]\n\n");
     printf("-b, --number-nonblank  | number nonempty output lines, overrides -n\n");
     printf("-e                     | equivalent to -vE\n");
     printf("-E, --show-ends        | print $ at the end of each line\n");
@@ -169,6 +175,6 @@ void error_help_print()
     printf("-t                     | equivalent to -vT\n");
     printf("-T, --show-tabs        | display TAB chars as ^I\n");
     printf("-v, --show-nonprinting | use ^ and M- notation, except for LFD and TAB\n");
-    printf("-h, --help             | display this help and exit\n");
+    printf("-h                     | display this help and exit\n");
     exit(EXIT_FAILURE);
 }
