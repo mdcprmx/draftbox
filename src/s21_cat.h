@@ -39,6 +39,7 @@ typedef struct {
 
 void scenario_open_file(int argc, char **argv);
 void scenario_no_arguments();
+FILE *funct_file_open(int argc, char **argv);
 void funct_arguments_parser(int argc, char **argv, flag_config *opt_switcher);
 void funct_file_print(FILE *fname, flag_config *opt_state);
 void check_memory_allocation(char **ofu_buffer);

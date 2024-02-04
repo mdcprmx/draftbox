@@ -11,27 +11,20 @@ int main(int argc, char *argv[])
     }
 
     // if no arguments.
-    else scenario_no_arguments(); 
+    else scenario_no_arguments();
     
     return EXIT_SUCCESS;
 }
 //////////////////
 //////////////////
 
-
 void scenario_open_file(int argc, char **argv)
 {
     flag_config opt_switcher = {0};
     funct_arguments_parser(argc, argv, &opt_switcher);
 
-    FILE *fname = NULL;
-    for (int i = 1; i < argc ; i++ )    // depends of arg counter.
-    {
-        
-        fname = fopen(argv[i], "r");    // tries to open a file 
-        if (fname != NULL) break;       // if fopen returns NULL - it didnt open a file.
-    }
-    
+    FILE *fname = funct_file_open(argc, argv);
+
     check_file_exist(fname);
     funct_file_print(fname, &opt_switcher);
 }
@@ -84,6 +77,17 @@ void text_squeeze(FILE* fname_b)
         ch_crnt_bfr = fgetc(fname_b);
     }
     ungetc(ch_crnt_bfr, fname_b);
+}
+
+FILE* funct_file_open(int argc, char **argv)
+{
+    FILE *file_pointer = NULL;
+    for (int i = 1; i < argc ; i++ )           // depends of arg counter.
+    {
+        file_pointer = fopen(argv[i], "r");    // tries to open a file 
+        if (file_pointer != NULL) break;       // if fopen returns NULL - it didnt open a file.
+    }
+    
 }
 
 void check_file_exist(FILE *fname_c)
@@ -192,3 +196,4 @@ void error_help_print()
     printf("-h                     | display this help and exit\n");
     exit(EXIT_FAILURE);
 }
+
