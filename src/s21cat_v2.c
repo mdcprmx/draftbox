@@ -27,6 +27,7 @@ void scenario_open_file(int argc, char **argv)
     FILE *fname = NULL;
     for (int i = 1; i < argc ; i++ )    // depends of arg counter.
     {
+        
         fname = fopen(argv[i], "r");    // tries to open a file 
         if (fname != NULL) break;       // if fopen returns NULL - it didnt open a file.
     }
@@ -39,26 +40,37 @@ void funct_file_print(FILE *fname_a, flag_config *opt_state)
 {
     char ch_previous_buffer = '\n';
     char ch_current_buffer = fgetc(fname_a);
+    size_t lines_counter = 0;
     
+
     while (ch_current_buffer != EOF)
     {
-        putc(ch_current_buffer, stdout);
+        putc(ch_current_buffer, stdout);     
         ch_current_buffer = fgetc(fname_a);
 
-        // soo this doesnt works. function doesnt works too. FIX THISSS
-        if (opt_state->s_flag && ch_previous_buffer == '\n' && ch_current_buffer == '\n')
+        // flag 'e' logic
+        if(opt_state->e_flag == 1 && ch_current_buffer == '\n' )
         {
-            text_squeeze(fname_a);
+            fputc('$', stdout);
         }
 
+        // flag 'n' logic (n is part of 'b' and 'n' flags)
+        if(opt_state->b_flag == 1 && ch_previous_buffer == '\n' && ch_current_buffer != '\n')
+        {
+            fprintf(stdout, "%6zu\t", lines_counter);
+            lines_counter++;
+        } else if (opt_state->n_flag && ch_previous_buffer == '\n')
+        {
+            fprintf(stdout, "%6zu\t", lines_counter);
+            lines_counter++;
+        }
+        
+        // flag
 
 
-        // if (opt_state->n_flag != 0)
-        // {
-        //     int line_counter = 0;
-        //     printf("%6d\t", line_counter); 
-        //     line_counter++;
-        // }
+
+        // ch_previous_buffer = ch_current_buffer;
+        // ch_current_buffer = fgetc(fname_a);
     }
 
     fclose(fname_a);
@@ -74,15 +86,6 @@ void text_squeeze(FILE* fname_b)
     ungetc(ch_crnt_bfr, fname_b);
 }
 
-void check_memory_allocation(char **ofu_buffer)
-{
-    if(ofu_buffer == NULL)
-    {
-        printf("Allocating memory failed.\n");
-        exit(EXIT_FAILURE);
-    }
-}
-
 void check_file_exist(FILE *fname_c)
 {
     if (fname_c == 0)  // yeah, not 'NULL', it is '0'
@@ -95,10 +98,11 @@ void check_file_exist(FILE *fname_c)
 void funct_arguments_parser(int argc, char **argv, flag_config *opt_switcher)
 {
     const char *SHORT_OPT = "+beEnstTvh";
-    char buffer_w_flag = getopt_long(argc, argv, SHORT_OPT, LONG_OPT, 0);
+    int buffer_w_flag = getopt_long(argc, argv, SHORT_OPT, LONG_OPT, 0);
 
     while (buffer_w_flag != -1)
     {
+        
         switch (buffer_w_flag)
         {
             case 'b':
@@ -129,7 +133,7 @@ void funct_arguments_parser(int argc, char **argv, flag_config *opt_switcher)
                 break;
 
             case 'E':
-                opt_switcher->E_flag = 1;
+                opt_switcher->e_flag = 1;
                 printf("E flag is on\n");
                 break;
 
@@ -143,19 +147,16 @@ void funct_arguments_parser(int argc, char **argv, flag_config *opt_switcher)
                 printf("v flag is on\n");
                 break;
 
-            case '0':
+            case 'h':
                 error_help_print();
                 break;
 
             case '?':
-                error_usage_print();
-                break;
-
             default:
-                error_help_print();
+                error_usage_print();
         }
 
-    buffer_w_flag = getopt_long(argc, argv, SHORT_OPT, LONG_OPT, 0);
+        buffer_w_flag = getopt_long(argc, argv, SHORT_OPT, LONG_OPT, 0);
     }
 }
 

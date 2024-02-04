@@ -6,20 +6,28 @@ void practice_string_compare();
 
 int main()
 {
-    char *buff1 = "Hello";
-    char *buff2 = "Hello";
+    int bfr_c;
 
-    // so, function strcmp returns 0 when comparing is successfull
-    if (strcmp(buff1, buff2) == 0)
-    {
-        printf("compare result: equal\n");
-    }
+    // lmao, what does ungetc do?! my brain can't understand it, sadly.
+    bfr_c = getchar();
+    ungetc(bfr_c, stdin);
+    ungetc(bfr_c, stdin);
+    ungetc(bfr_c, stdin);
+    ungetc(bfr_c, stdin);
+    ungetc(bfr_c, stdin);
+    ungetc(bfr_c, stdin);
+    ungetc(bfr_c, stdin);
 
-    else
-    {
-        printf("not equal\n");
-    }
-
+    putchar(bfr_c);
+    putchar(bfr_c);
+    putchar(bfr_c);
+    putchar(bfr_c);
+    putchar(bfr_c);
+    putchar(bfr_c);
+    putchar(bfr_c);
+    putchar(bfr_c);
+    putchar(bfr_c);
+    putchar(bfr_c);
     return 0;
 }
 

@@ -21,7 +21,7 @@ const struct option LONG_OPT[] =
 {0,                       no_argument, 0, 't'},
 {"show-tabs",             no_argument, 0, 'T'},
 {"show-nonprinting",      no_argument, 0, 'v'},
-{"help",                  no_argument, 0, '0'},
+{"help",                  no_argument, 0, 'h'},
 {NULL,                           0, NULL,   0}
 };
 
