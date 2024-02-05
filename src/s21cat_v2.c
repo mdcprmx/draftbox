@@ -23,7 +23,8 @@ void scenario_open_file(int argc, char **argv)
     flag_config opt_switcher = {0};
     funct_arguments_parser(argc, argv, &opt_switcher);
 
-    FILE *fname = funct_file_open(argc, argv);
+    FILE *fname;
+    fname = funct_file_open(argc, argv);
 
     check_file_exist(fname);
     funct_file_print(fname, &opt_switcher);
@@ -31,37 +32,43 @@ void scenario_open_file(int argc, char **argv)
 
 void funct_file_print(FILE *fname_a, flag_config *opt_state)
 {
-    char ch_previous_buffer = '\n';
-    char ch_current_buffer = fgetc(fname_a);
-    size_t lines_counter = 0;
+    // char ch_previous_buffer = '\n';
+    static size_t LFD_counter = 1;
+    int lines_counter = 0;
     
+    char ch_current_buffer = fgetc(fname_a);
+    // while (ch_current_buffer != EOF)
 
-    while (ch_current_buffer != EOF)
+    while (!feof(fname_a))
     {
-        putc(ch_current_buffer, stdout);     
-        ch_current_buffer = fgetc(fname_a);
+        // flag 's' logic
+        // if (opt_state->s_flag == 1)
+        // {
 
-        // flag 'e' logic
+        // }
+
+        // flag 'e' logic = WORKING
         if(opt_state->e_flag == 1 && ch_current_buffer == '\n' )
         {
-            fputc('$', stdout);
+            text_show_dollar();
         }
 
         // flag 'n' logic (n is part of 'b' and 'n' flags)
-        if(opt_state->b_flag == 1 && ch_previous_buffer == '\n' && ch_current_buffer != '\n')
+        if(opt_state->b_flag == 1 && ch_current_buffer == '\n')
         {
-            fprintf(stdout, "%6zu\t", lines_counter);
-            lines_counter++;
-        } else if (opt_state->n_flag && ch_previous_buffer == '\n')
-        {
-            fprintf(stdout, "%6zu\t", lines_counter);
+            printf("%d\t", lines_counter); // WIP
             lines_counter++;
         }
+        // else if (opt_state->n_flag == 1)
+        // {
+        //     fprintf(stdout, "%6zu\t", lines_counter);
+        //     lines_counter++;
+        // }
         
         // flag
 
-
-
+        putc(ch_current_buffer, stdout);
+        ch_current_buffer = fgetc(fname_a);
         // ch_previous_buffer = ch_current_buffer;
         // ch_current_buffer = fgetc(fname_a);
     }
@@ -77,6 +84,11 @@ void text_squeeze(FILE* fname_b)
         ch_crnt_bfr = fgetc(fname_b);
     }
     ungetc(ch_crnt_bfr, fname_b);
+}
+
+void text_show_dollar()
+{
+    fputc('$', stdout);
 }
 
 FILE* funct_file_open(int argc, char **argv)
