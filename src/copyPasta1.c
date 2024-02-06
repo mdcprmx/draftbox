@@ -1,40 +1,33 @@
 #include "s21_cat.h"
 
-FILE *printData(FILE *file, options *config) 
-{
-    // so, this is some sort of flag initialization for "double flags"
-  for (char sym = '0'; (sym = getc(file)) != EOF; ) 
-  {
+FILE *printData(FILE *file, options *config) {
+  // so, this is some sort of flag initialization for "double flags"
+  for (char sym = '0'; (sym = getc(file)) != EOF;) {
     config->emptyLine = 0;
 
-    if (config->s && config->counterS == 0 && sym == '\n') 
-    {
+    if (config->s && config->counterS == 0 && sym == '\n') {
       config->counterS += 1;
-    } 
-    
-    else if (config->counterS != 0 && sym == '\n') 
-    {
+    }
+
+    else if (config->counterS != 0 && sym == '\n') {
       config->counterS += 1;
       config->emptyLine = 1;
-    } 
-    
-    else if (config->counterS > 1 && sym != '\n') 
-    {
+    }
+
+    else if (config->counterS > 1 && sym != '\n') {
       config->counterS = 0;
       config->e ? printf("$\n") : printf("\n");
       if (config->n != 0) printf("%6d\t", config->n++);
-    } 
-    
-    else 
-    {
+    }
+
+    else {
       config->counterS = 0;
     }
     ///////////////////////////////////////
     ///////////////////////////////////////
 
     // and this, is printing logic
-    if (config->n != 0 || config->b != 0) 
-    {
+    if (config->n != 0 || config->b != 0) {
       if (config->newLine == 1 && !(config->newLine = 0))
         printf("%6d\t", config->n++);
 
@@ -55,8 +48,7 @@ FILE *printData(FILE *file, options *config)
     // printing logic part 2
     if (sym == '\n' && config->e && config->emptyLine == 0) printf("$");
 
-    if (config->v) 
-    {
+    if (config->v) {
       if (sym < 32 && sym != 9 && sym != 10)
         if (sym += 64) printf("^");
       if (sym == 127)
@@ -64,8 +56,7 @@ FILE *printData(FILE *file, options *config)
     }
 
     if (config->t && sym == '\t')
-      if ((sym = 'I')) 
-      printf("^");
+      if ((sym = 'I')) printf("^");
 
     if (config->emptyLine == 0) printf("%c", sym);
   }
