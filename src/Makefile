@@ -20,7 +20,7 @@ check:
 	clangn clangi clangn
 
 clangn:
-	clang-format -style=Google -n *.c
+	clang-format -style=Google -n *.c *.h
 
 clangi:
-	clang-format -style=Google -i *.c
+	clang-format -style=Google -i *.c *.h
