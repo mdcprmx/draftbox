@@ -1,21 +1,15 @@
 #include "s21_cat.h"
 
-//////////////////
-//////////////////
 int main(int argc, char *argv[]) {
-  // if arguments exist.
   if (argc > 1) {
     scenario_open_file(argc, argv);
   }
 
-  // if no arguments.
   else
     scenario_no_arguments();
 
   return EXIT_SUCCESS;
 }
-//////////////////
-//////////////////
 
 void scenario_open_file(int argc, char **argv) {
   flag_config opt_switcher = {0};
@@ -35,7 +29,6 @@ void funct_file_print(FILE *fname_a, flag_config *opt_state) {
   char ch_previous;
   char ch_buffer;
   while ((ch_buffer = fgetc(fname_a)) != EOF) {
-    // flag s
     if (opt_state->s_flag == 1 && ch_previous == '\n' && ch_buffer == '\n') {
       str_counter++;
       if (str_counter > 1) {
@@ -43,7 +36,6 @@ void funct_file_print(FILE *fname_a, flag_config *opt_state) {
       }
     }
 
-    // flag n, flag b
     if ((opt_state->n_flag == 1 && ch_previous == '\n' &&
          opt_state->b_flag == 0) ||
         ((opt_state->b_flag == 1) && ch_previous == '\n' &&
@@ -51,18 +43,15 @@ void funct_file_print(FILE *fname_a, flag_config *opt_state) {
       printf("%6d\t", counter++);
     }
 
-    // flag e
     if (opt_state->e_flag == 1 && ch_buffer == '\n') {
       printf("$");
     }
 
-    // flag t
     if (opt_state->t_flag == 1 && ch_buffer == '\t') {
       printf("^");
       ch_buffer = 'I';
     }
 
-    // flag v
     if (opt_state->v_flag == 1 && !(ch_buffer >= 32 && ch_previous < 127) &&
         ch_buffer != '\n' && ch_buffer != '\t') {
       if (ch_buffer == 127) {
@@ -82,18 +71,15 @@ void funct_file_print(FILE *fname_a, flag_config *opt_state) {
 
 FILE *funct_file_open(int argc, char **argv) {
   FILE *file_pointer = NULL;
-  for (int i = 1; i < argc; i++)  // depends of arg counter.
-  {
-    file_pointer = fopen(argv[i], "r");  // tries to open a file
-    if (file_pointer != NULL)
-      break;  // if fopen returns NULL - it didnt open a file.
+  for (int i = 1; i < argc; i++) {
+    file_pointer = fopen(argv[i], "r");
+    if (file_pointer != NULL) break;
   }
   return file_pointer;
 }
 
 void check_file_exist(FILE *fname_c) {
-  if (fname_c == 0)  // yeah, not 'NULL', it is '0'
-  {
+  if (fname_c == 0) {
     printf("Error, couldn't open a file\n");
     exit(EXIT_FAILURE);
   }
@@ -166,7 +152,7 @@ void scenario_no_arguments() {
   while (1) {
     scanf("%2000[^\n]s", usr_inpt_buffer);
     printf("%s\n", usr_inpt_buffer);
-    break;  // WIP
+    break;
   }
 }
 
@@ -179,8 +165,7 @@ void error_usage_print() {
 
 void error_help_print() {
   printf("CAT usage: [FLAG] [FILE_NAME]\n\n");
-  printf(
-      "-b, --number-nonblank  | number nonempty output lines, overrides -n\n");
+  printf("-b, --number-nonblank  | number nonempty lines, overrides -n\n");
   printf("-e                     | equivalent to -vE\n");
   printf("-E, --show-ends        | print $ at the end of each line\n");
   printf("-n, --number           | number all output lines\n");
