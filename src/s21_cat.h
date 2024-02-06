@@ -8,7 +8,6 @@
 #include <unistd.h>
 
 #define BUFFER_SIZE 2048
-#define MEM_ALLOC_SIZE 10000
 
 // this struct is part of getopt.h, it must remain constant
 const struct option LONG_OPT[] = {{"number-nonblank", no_argument, 0, 'b'},
