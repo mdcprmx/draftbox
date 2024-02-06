@@ -32,49 +32,107 @@ void scenario_open_file(int argc, char **argv)
 
 void funct_file_print(FILE *fname_a, flag_config *opt_state)
 {
-    // char ch_previous_buffer = '\n';
-    static size_t LFD_counter = 1;
-    int lines_counter = 0;
-    
-    char ch_current_buffer = fgetc(fname_a);
-    // while (ch_current_buffer != EOF)
+    int str_counter = 0;
+    int counter = 1;
 
-    while (!feof(fname_a))
+    char ch_previous; 
+    char ch_buffer;
+    while ((ch_buffer = fgetc(fname_a)) != EOF)
     {
-        // flag 's' logic
-        // if (opt_state->s_flag == 1)
-        // {
-
-        // }
-
-        // flag 'e' logic = WORKING
-        if(opt_state->e_flag == 1 && ch_current_buffer == '\n' )
+        // flag s
+        if (opt_state->s_flag == 1 && ch_previous == '\n' && ch_buffer == '\n')
         {
-            text_show_dollar();
+            str_counter++;
+            if (str_counter > 1) {
+                continue;
+            }
         }
-
-        // flag 'n' logic (n is part of 'b' and 'n' flags)
-        if(opt_state->b_flag == 1 && ch_current_buffer == '\n')
-        {
-            printf("%d\t", lines_counter); // WIP
-            lines_counter++;
-        }
-        // else if (opt_state->n_flag == 1)
-        // {
-        //     fprintf(stdout, "%6zu\t", lines_counter);
-        //     lines_counter++;
-        // }
         
-        // flag
+        // flag n, flag b 
+        if ((opt_state->n_flag == 1 && ch_previous == '\n' && opt_state->b_flag == 0) ||
+            ((opt_state->b_flag == 1) && ch_previous == '\n' && ch_buffer != '\n'))
+            {
+                printf("%6d\t", counter++);
+            }
 
-        putc(ch_current_buffer, stdout);
-        ch_current_buffer = fgetc(fname_a);
-        // ch_previous_buffer = ch_current_buffer;
-        // ch_current_buffer = fgetc(fname_a);
+        // flag e
+        if (opt_state->e_flag == 1 && ch_buffer == '\n')
+        {
+            printf("$");
+        }
+
+        // flag t
+        if (opt_state->t_flag == 1 && ch_buffer == '\t')
+        {
+            printf("^");
+            ch_buffer = 'I';
+        }
+
+        // flag v
+        if (opt_state->v_flag == 1 && !(ch_buffer >= 32 && ch_previous < 127) && ch_buffer != '\n' && ch_buffer != '\t')
+        {
+            if (ch_buffer == 127)
+            {
+                printf("^");
+                ch_buffer = ch_buffer - 64;
+            }
+            else if (ch_buffer < 32 && ch_buffer >= 0)
+            {
+                printf("^");
+                ch_buffer = ch_buffer + 64;
+            }
+        }
+
+        ch_previous = ch_buffer;
+        printf("%c", ch_buffer);
+        // putc(ch_buffer, stdout);
+        // ch_buffer = fgetc(fname_a);
     }
-
     fclose(fname_a);
 }
+
+// void funct_file_print(FILE *fname_a, flag_config *opt_state)
+// {
+//     char ch_previous_buffer = '\n';
+//     static size_t LFD_counter = 1;
+//     int lines_counter = 0;
+    
+//     char ch_buffer = fgetc(fname_a);
+//     while (ch_buffer != EOF)
+//     {
+//         // flag 's' logic
+//         // if (opt_state->s_flag == 1)
+//         // {
+
+//         // }
+
+//         // flag 'e' logic = WORKING
+//         if(opt_state->e_flag == 1 && ch_buffer == '\n' )
+//         {
+//             text_show_dollar();
+//         }
+
+//         // flag 'n' logic (n is part of 'b' and 'n' flags)
+//         if(opt_state->b_flag == 1 && ch_buffer == '\n')
+//         {
+//             printf("%d\t", lines_counter); // WIP
+//             lines_counter++;
+//         }
+//         // else if (opt_state->n_flag == 1)
+//         // {
+//         //     fprintf(stdout, "%6zu\t", lines_counter);
+//         //     lines_counter++;
+//         // }
+        
+//         // flag
+
+//         putc(ch_buffer, stdout);
+//         ch_buffer = fgetc(fname_a);
+//         // ch_previous_buffer = ch_buffer;
+//         // ch_buffer = fgetc(fname_a);
+//     }
+//     fclose(fname_a);
+// }
 
 void text_squeeze(FILE* fname_b)
 {
