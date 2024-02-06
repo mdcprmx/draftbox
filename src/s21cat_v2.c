@@ -80,14 +80,6 @@ void funct_file_print(FILE *fname_a, flag_config *opt_state) {
   fclose(fname_a);
 }
 
-void text_squeeze(FILE *fname_b) {
-  char ch_crnt_bfr = fgetc(fname_b);
-  while (ch_crnt_bfr = '\n') {
-    ch_crnt_bfr = fgetc(fname_b);
-  }
-  ungetc(ch_crnt_bfr, fname_b);
-}
-
 void text_show_dollar() { fputc('$', stdout); }
 
 FILE *funct_file_open(int argc, char **argv) {
