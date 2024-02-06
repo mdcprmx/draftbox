@@ -1,0 +1,17 @@
+Soo, cat logic is:
+
+b = b, overrides n
+
+e = v and E
+
+E = E
+
+n = n
+
+s = s
+
+t = v and T
+
+T = T
+
+v = v
