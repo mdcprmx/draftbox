@@ -1,11 +1,11 @@
 CC = gcc
 FLAGS = -Wall -Wextra -Werror -std=c11 -pedantic
-SRC_FILE = s21cat_v3_final.c
+SRC_FILE = s21_cat.c
 
 all: clear s21_cat
 
 s21_cat:
-	$(CC) $(FLAGS) $(SRC_FILE) -o s21cat.out
+	$(CC) $(FLAGS) $(SRC_FILE) -o s21_cat
 
 clean:
 	clear

@@ -29,11 +29,10 @@ void funct_file_print(FILE *fname_a, flag_config *opt_state) {
   char ch_previous;
   char ch_buffer;
   while ((ch_buffer = fgetc(fname_a)) != EOF) {
+   
     if (opt_state->s_flag == 1 && ch_previous == '\n' && ch_buffer == '\n') {
-      str_counter++;
-      if (str_counter > 1) {
-        continue;
-      }
+    str_counter++;
+    if (str_counter > 1) continue;
     }
 
     if ((opt_state->n_flag == 1 && ch_previous == '\n' &&
@@ -146,16 +145,6 @@ void funct_arguments_parser(int argc, char **argv, flag_config *opt_switcher) {
   }
 }
 
-void scenario_no_arguments() {
-  char usr_inpt_buffer[BUFFER_SIZE];
-
-  while (1) {
-    scanf("%2000[^\n]s", usr_inpt_buffer);
-    printf("%s\n", usr_inpt_buffer);
-    break;
-  }
-}
-
 void error_usage_print() {
   printf(
       "Error, invalid flag | Usage: [FLAG] [FILE_NAME] | flags are "
@@ -177,4 +166,14 @@ void error_help_print() {
       "TAB\n");
   printf("-h                     | display this help and exit\n");
   exit(EXIT_FAILURE);
+}
+
+void scenario_no_arguments() {
+  char usr_inpt_buffer[BUFFER_SIZE];
+
+  while (1) {
+    scanf("%2000[^\n]s", usr_inpt_buffer);
+    printf("%s\n", usr_inpt_buffer);
+    break;
+  }
 }
