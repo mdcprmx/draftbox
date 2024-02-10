@@ -148,14 +148,16 @@ void job(struct arguments arg, char* path, regex_t* reg) {
     if (!arg.s) perror(path);
     exit(1);
   }
-  char* line = NULL;
+  char *line = NULL;
   size_t memlen = 0;
   ssize_t read = getline(&line, &memlen, f);
   int line_count = 1;
   int c = 0;
-  while (read != -1 && read != EOF) {
+  while (read != -1 && read != EOF) 
+  {
     int result = regexec(reg, line, 0, NULL, 0);
-    if ((result == 0 && !arg.v) || (arg.v && result != 0)) {
+    if ((result == 0 && !arg.v) || (arg.v && result != 0)) 
+    {
       if (!arg.c && !arg.l) {
         if (!arg.h) printf("%s:", path);
         if (arg.n) printf("%d:", line_count);
@@ -171,7 +173,8 @@ void job(struct arguments arg, char* path, regex_t* reg) {
     line_count++;
   }
   free(line);
-  if (arg.c && !arg.l) {
+  if (arg.c && !arg.l) 
+  {
     if (!arg.h) printf("%s:", path);
     printf("%d\n", c);
   }

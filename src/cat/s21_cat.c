@@ -92,44 +92,36 @@ void funct_arguments_parser(int argc, char **argv, flag_config *opt_switcher) {
     switch (buffer_w_flag) {
       case 'b':
         opt_switcher->b_flag = 1;
-        printf("b flag is on\n");
         break;
 
       case 'e':
         opt_switcher->e_flag = 1;
         opt_switcher->v_flag = 1;
-        printf("e flag is on\n");
         break;
 
       case 'n':
         opt_switcher->n_flag = 1;
-        printf("n flag is on\n");
         break;
 
       case 's':
         opt_switcher->s_flag = 1;
-        printf("s flag is on\n");
         break;
 
       case 't':
         opt_switcher->t_flag = 1;
         opt_switcher->v_flag = 1;
-        printf("t flag is on\n");
         break;
 
       case 'E':
         opt_switcher->e_flag = 1;
-        printf("E flag is on\n");
         break;
 
       case 'T':
         opt_switcher->T_flag = 1;
-        printf("T flag is on\n");
         break;
 
       case 'v':
         opt_switcher->v_flag = 1;
-        printf("v flag is on\n");
         break;
 
       case 'h':
