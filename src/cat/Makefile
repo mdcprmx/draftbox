@@ -7,20 +7,23 @@ all: clear s21_cat
 s21_cat:
 	$(CC) $(FLAGS) $(SRC_FILE) -o s21_cat
 
-clean:
-	clear
+clean: clear
 
 clear:
 	rm -rf s21_cat *.out
 
-testing:
+test:
+	cd test
+	./cat_test.sh
 
-
-check:
-	clangn clangi clangn
+clangfull: clangn clangi clangn
 
 clangn:
 	clang-format -style=Google -n *.c *.h
 
 clangi:
 	clang-format -style=Google -i *.c *.h
+
+valgrind:
+	cd test
+	valgrind --tool=memcheck --leak-check=yes ./s21_cat ayo.txt

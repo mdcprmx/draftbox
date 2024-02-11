@@ -11,8 +11,7 @@ int main(int argc, char *argv[]) {
   return EXIT_SUCCESS;
 }
 
-void scenario_open_file(int argc, char **argv) 
-{
+void scenario_open_file(int argc, char **argv) {
   flag_config opt_switcher = {0};
   funct_arguments_parser(argc, argv, &opt_switcher);
 
@@ -23,18 +22,16 @@ void scenario_open_file(int argc, char **argv)
   funct_file_print(fname, &opt_switcher);
 }
 
-void funct_file_print(FILE *fname_a, flag_config *opt_state) 
-{
+void funct_file_print(FILE *fname_a, flag_config *opt_state) {
   int counter_s_flag = 0;
   int counter_nb_flags = 1;
 
   char ch_previous = '\n';
   char ch_buffer;
   while ((ch_buffer = fgetc(fname_a)) != EOF) {
-   
     if (opt_state->s_flag == 1 && ch_previous == '\n' && ch_buffer == '\n') {
-    counter_s_flag++;
-    if (counter_s_flag > 1) continue;
+      counter_s_flag++;
+      if (counter_s_flag > 1) continue;
     }
 
     if ((opt_state->n_flag == 1 && ch_previous == '\n' &&
@@ -71,8 +68,7 @@ void funct_file_print(FILE *fname_a, flag_config *opt_state)
   fclose(fname_a);
 }
 
-FILE *funct_file_open(int argc, char **argv) 
-{
+FILE *funct_file_open(int argc, char **argv) {
   FILE *file_pointer = NULL;
   for (int i = optind; i < argc; i++) {
     file_pointer = fopen(argv[i], "r");
@@ -173,4 +169,3 @@ void error_help_print() {
   printf("-h                     | display this help and exit\n");
   exit(EXIT_FAILURE);
 }
-
