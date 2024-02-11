@@ -29,7 +29,6 @@ typedef struct {
   int s_flag;
   int t_flag;
   int E_flag;
-  int T_flag;
   int v_flag;
 } flag_config;
 

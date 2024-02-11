@@ -8,9 +8,12 @@ int main(int argc, char **argv)
 
     const char *regex_args = "ayo";
 
-    int ret = regcomp()
+    int ret = regcomp();
 
 
 
     return 0;
 }
+
+
+

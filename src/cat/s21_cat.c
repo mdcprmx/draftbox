@@ -11,7 +11,8 @@ int main(int argc, char *argv[]) {
   return EXIT_SUCCESS;
 }
 
-void scenario_open_file(int argc, char **argv) {
+void scenario_open_file(int argc, char **argv) 
+{
   flag_config opt_switcher = {0};
   funct_arguments_parser(argc, argv, &opt_switcher);
 
@@ -22,24 +23,26 @@ void scenario_open_file(int argc, char **argv) {
   funct_file_print(fname, &opt_switcher);
 }
 
-void funct_file_print(FILE *fname_a, flag_config *opt_state) {
-  int str_counter = 0;
-  int counter = 1;
+void funct_file_print(FILE *fname_a, flag_config *opt_state) 
+{
+  int counter_s_flag = 0;
+  int counter_nb_flags = 1;
 
-  char ch_previous;
+  char ch_previous = '\n';
   char ch_buffer;
   while ((ch_buffer = fgetc(fname_a)) != EOF) {
    
     if (opt_state->s_flag == 1 && ch_previous == '\n' && ch_buffer == '\n') {
-    str_counter++;
-    if (str_counter > 1) continue;
+    counter_s_flag++;
+    if (counter_s_flag > 1) continue;
     }
 
     if ((opt_state->n_flag == 1 && ch_previous == '\n' &&
          opt_state->b_flag == 0) ||
         ((opt_state->b_flag == 1) && ch_previous == '\n' &&
          ch_buffer != '\n')) {
-      printf("%6d\t", counter++);
+      printf("%6d\t", counter_nb_flags);
+      counter_nb_flags++;
     }
 
     if (opt_state->e_flag == 1 && ch_buffer == '\n') {
@@ -68,24 +71,18 @@ void funct_file_print(FILE *fname_a, flag_config *opt_state) {
   fclose(fname_a);
 }
 
-FILE *funct_file_open(int argc, char **argv) {
+FILE *funct_file_open(int argc, char **argv) 
+{
   FILE *file_pointer = NULL;
-  for (int i = 1; i < argc; i++) {
+  for (int i = optind; i < argc; i++) {
     file_pointer = fopen(argv[i], "r");
     if (file_pointer != NULL) break;
   }
   return file_pointer;
 }
 
-void check_file_exist(FILE *fname_c) {
-  if (fname_c == 0) {
-    printf("Error, couldn't open a file\n");
-    exit(EXIT_FAILURE);
-  }
-}
-
 void funct_arguments_parser(int argc, char **argv, flag_config *opt_switcher) {
-  const char *SHORT_OPT = "+beEnstTvh";
+  const char *SHORT_OPT = "beEnstTvh";
   int buffer_w_flag = getopt_long(argc, argv, SHORT_OPT, LONG_OPT, 0);
 
   while (buffer_w_flag != -1) {
@@ -117,7 +114,7 @@ void funct_arguments_parser(int argc, char **argv, flag_config *opt_switcher) {
         break;
 
       case 'T':
-        opt_switcher->T_flag = 1;
+        opt_switcher->t_flag = 1;
         break;
 
       case 'v':
@@ -134,6 +131,23 @@ void funct_arguments_parser(int argc, char **argv, flag_config *opt_switcher) {
     }
 
     buffer_w_flag = getopt_long(argc, argv, SHORT_OPT, LONG_OPT, 0);
+  }
+}
+
+void scenario_no_arguments() {
+  char usr_inpt_buffer[BUFFER_SIZE];
+
+  while (1) {
+    scanf("%2000[^\n]s", usr_inpt_buffer);
+    printf("%s\n", usr_inpt_buffer);
+    break;
+  }
+}
+
+void check_file_exist(FILE *fname_c) {
+  if (fname_c == 0) {
+    printf("Error, couldn't open a file\n");
+    exit(EXIT_FAILURE);
   }
 }
 
@@ -160,12 +174,3 @@ void error_help_print() {
   exit(EXIT_FAILURE);
 }
 
-void scenario_no_arguments() {
-  char usr_inpt_buffer[BUFFER_SIZE];
-
-  while (1) {
-    scanf("%2000[^\n]s", usr_inpt_buffer);
-    printf("%s\n", usr_inpt_buffer);
-    break;
-  }
-}
