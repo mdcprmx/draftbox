@@ -14,6 +14,7 @@ clear:
 
 test:
 	cd test
+	chmod 777 cat_test.sh
 	./cat_test.sh
 
 clangfull: clangn clangi clangn

@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <regex.h>
+#include <getopt.h>
 
 #define BUFFER_SIZE 2048
 
@@ -17,7 +18,6 @@ typedef struct {
     int l_flag;
     int n_flag;
 } grep_flags;
-
 
 #endif // S21_GREP_LIB
 ////// HEADER FILE END ////////////
@@ -38,16 +38,30 @@ typedef struct {
 
 int main(int argc, char **argv)
 {
+    if (argc > 2)
+    {
     grep_flags opt_switcher = {0};
-    funct_args_parser(argc, argv, &opt_switcher);
 
-    FILE *file_ptr;
-    file_ptr = funct_file_open(argc, argv);
-
-    funct_processor();
-    funct_result_print();
+    opt_switcher = funct_args_parser(argc, argv, opt_switcher);
+    scenario_grep_start(argc, argv, opt_switcher);
+    }
 
     return EXIT_SUCCESS;
+}
+
+void scenario_grep_start(int argc,char  **argv, grep_flags opt_stat)
+{  
+    funct_file_open(argc, argv); 
+    funct_grep_logic(argc, argv);
+
+
+}
+
+
+FILE funct_file_open(int argc, char **argv)
+{
+  
+
 }
 
 grep_flags funct_args_parser(int argc, char **argv, grep_flags opt_switcher)
@@ -61,27 +75,44 @@ grep_flags funct_args_parser(int argc, char **argv, grep_flags opt_switcher)
     {
         switch (buffer_ch) {
             case 'e':
+            printf("flag e is ON!\n");
+            opt_switcher.e_flag = 1;
+            break;
 
             case 'i':
+            printf("flag i is ON!\n");
+            opt_switcher.i_flag = 1;
+            break;
 
             case 'v':
+            printf("flag v is ON!\n");
+            opt_switcher.v_flag = 1;
 
             case 'c':
+            printf("flag c is ON!\n");
+            opt_switcher.c_flag = 1;
 
             case 'l':
+            printf("flag l is ON!\n");
+            opt_switcher.l_flag = 1;
 
             case 'n':
+            printf("flag n is ON!\n");
+            opt_switcher.n_flag = 1;
 
             default:
-
+            //error_print(); // WIP
         }
     }
 
-
+    return opt_switcher;
 }
 
-
-
+void error_print()
+{
+    printf("Error, correct flags are [e, i, v, c, l, n]\n");
+    exit(EXIT_FAILURE);
+}
 
 
 

@@ -29,6 +29,7 @@ void funct_file_print(FILE *fname_a, flag_config *opt_state) {
   char ch_previous = '\n';
   char ch_buffer;
   while ((ch_buffer = fgetc(fname_a)) != EOF) {
+
     if (opt_state->s_flag == 1 && ch_previous == '\n' && ch_buffer == '\n') {
       counter_s_flag++;
       if (counter_s_flag > 1) continue;
