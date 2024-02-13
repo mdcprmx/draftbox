@@ -7,17 +7,39 @@
 #include <string.h>
 #include <regex.h>
 #include <getopt.h>
+#include <unistd.h>
 
 #define BUFFER_SIZE 2048
 
+const struct option LONG_OPT[] = 
+{
+    {"ignore-case",         no_argument, NULL, 'i'},
+    {"regexp",              required_argument, NULL, 'e'},
+    {"invert-match",        no_argument, NULL, 'v'},
+    {"files-witch-matches", no_argument, NULL, 'l'},
+    {"count",               no_argument, NULL, 'c'},
+    {"line-number",         no_argument, NULL, 'n'},
+    {"no-filename",         no_argument, NULL, 'h'},
+    {"no-messages",         no_argument, NULL, 's'},
+    {"file",                required_argument, NULL, 'f'},
+    {"only-matching",       no_argument, NULL, 'o'},
+    {NULL, 0, NULL, 0}
+};
+
 typedef struct {
-    int e_flag;
-    int i_flag;
-    int v_flag;
-    int c_flag;
-    int l_flag;
-    int n_flag;
+    int e_flag;    // pattern 
+    int i_flag;    // ignore case sensetivity
+    int v_flag;    // invert match
+    int c_flag;    // count
+    int l_flag;    // output only matching files
+    int n_flag;    // prefix each line of output with number
+    int h_flag;    // supress filename
+    int f_flag;    // obtains patterns from FILE
+    int s_flag;    // hide error messages
+    int o_flag;    // only matching string part print 
 } grep_flags;
+
+
 
 #endif // S21_GREP_LIB
 ////// HEADER FILE END ////////////
@@ -40,23 +62,32 @@ int main(int argc, char **argv)
 {
     if (argc > 2)
     {
-    grep_flags opt_switcher = {0};
+    char buffer_pattern[BUFFER_SIZE] = " ";
 
-    opt_switcher = funct_args_parser(argc, argv, opt_switcher);
-    scenario_grep_start(argc, argv, opt_switcher);
+    grep_flags opt_state = {0};
+    opt_state = funct_args_parser(argc, argv, opt_state, buffer_pattern);
+    scenario_grep_start(argc, argv, opt_state);
+    }
+
+    else
+    {
+        error_print();
     }
 
     return EXIT_SUCCESS;
 }
 
-void scenario_grep_start(int argc,char  **argv, grep_flags opt_stat)
-{  
-    funct_file_open(argc, argv); 
+void scenario_grep_start(int argc, char  **argv, grep_flags opt_status)
+{
+
+    while (1)
+    {
+    funct_file_open(argc, argv);
     funct_grep_logic(argc, argv);
 
+    }
 
 }
-
 
 FILE funct_file_open(int argc, char **argv)
 {
@@ -64,53 +95,56 @@ FILE funct_file_open(int argc, char **argv)
 
 }
 
-grep_flags funct_args_parser(int argc, char **argv, grep_flags opt_switcher)
+grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char buffer_str)
 {
-    const char *SHORT_OPT = "e:ivcln";
+    const char *SHORT_OPT = ":e:ivclnsf:ho";
 
-    int buffer_ch;
-    buffer_ch = getopt(argc, argv, SHORT_OPT);
+    int buffer_ch = 0;
+    buffer_ch = getopt_long(argc, argv, SHORT_OPT, LONG_OPT, 0);
     
     while(buffer_ch != -1)
     {
         switch (buffer_ch) {
             case 'e':
             printf("flag e is ON!\n");
-            opt_switcher.e_flag = 1;
+            opts->e_flag = 1;
+            char max_length[] = BUFFER_SIZE - strlen(buffer_ch);
+            strncat(buffer_str, optarg, max_length);
+            strcat(buffer_str, "|");
             break;
 
             case 'i':
             printf("flag i is ON!\n");
-            opt_switcher.i_flag = 1;
+            opts->i_flag = 1;
             break;
 
             case 'v':
             printf("flag v is ON!\n");
-            opt_switcher.v_flag = 1;
+            opts->v_flag = 1;
 
             case 'c':
             printf("flag c is ON!\n");
-            opt_switcher.c_flag = 1;
+            opts->c_flag = 1;
 
             case 'l':
             printf("flag l is ON!\n");
-            opt_switcher.l_flag = 1;
+            opts->l_flag = 1;
 
             case 'n':
             printf("flag n is ON!\n");
-            opt_switcher.n_flag = 1;
+            opts->n_flag = 1;
 
             default:
             //error_print(); // WIP
         }
     }
 
-    return opt_switcher;
+    return opts;
 }
 
 void error_print()
 {
-    printf("Error, correct flags are [e, i, v, c, l, n]\n");
+    printf("Error, correct flags are [e, i, v, c, l, n, h, s, o]\n");
     exit(EXIT_FAILURE);
 }
 
