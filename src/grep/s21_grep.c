@@ -107,7 +107,15 @@ void scenario_grep_start(int argc, char  **argv)
     while (1)
     {
         counter++;
-        if ()
+        if (check_argument_or_name(argv[i]) == 2) // if flag E or F
+        {
+            counter++;
+            continue;
+        }
+
+        if () // bruh, WIP, refer to line 33
+
+
     }
 
     
@@ -147,7 +155,7 @@ void check_ef_flags(char *pattern_c, char **argv, grep_flags *opts_b, int cntr_a
     }
 }
 
-int check_argument_or_name(char *fname)
+int check_argument_or_name(char *fn_string)
 {
     const int NOT_A_FILE = 0;
     const int IS_FILE = 1;
@@ -155,11 +163,25 @@ int check_argument_or_name(char *fname)
 
     int result = 1;
 
-    if (strstr(fname))
+    if (fn_string[0] == '-')
+    {
+        result = NOT_A_FILE;
+    }
 
+    if (strstr(fn_string, "-e") != NULL || strstr(fn_string, "-f") != NULL) 
+    {
+        result = NOT_A_FILE;
+    }
 
+    if (!strcmp(fn_string, "-e") || !strcmp (fn_string, "-f"))
+    {
+        result = FLAG_EF_IS_ON;
+    }
 
-
+    if ((fn_string[strlen(fn_string) - 1] == 'f' || fn_string[strlen(fn_string) - 1] == 'e') && (fn_string[0] == '-'))
+    {
+        result = FLAG_EF_IS_ON;
+    }
 
     return result;
 }
@@ -233,19 +255,19 @@ grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char patte
 
 void job_file_pattern(char *path_to_file, char* pattern_b)
 {
-    FILE *fname;
-    fname = NULL;
+    FILE *fn_string;
+    fn_string = NULL;
 
     size_t length_pattern;
     length_pattern = strlen(pattern_b);  // length in bytes
 
-    fname = fopen(path_to_file, "r");
-    check_file_exist(fname);
+    fn_string = fopen(path_to_file, "r");
+    check_file_exist(fn_string);
 
     int buffer_ch;
     size_t loop_i;
     loop_i = 0;
-    while (length_pattern < BUFFER_SIZE && (buffer_ch = fgetc(fname) != EOF))
+    while (length_pattern < BUFFER_SIZE && (buffer_ch = fgetc(fn_string) != EOF))
     {
         if ((buffer_ch == 10 || buffer_ch == 13) && length_pattern > 1 && pattern_b[length_pattern - 1] != '|')
         {
@@ -265,7 +287,7 @@ void job_file_pattern(char *path_to_file, char* pattern_b)
         pattern_b[length_pattern] = '|';
     }
 
-    fclose(fname);
+    fclose(fn_string);
 }
 
 void check_file_exist(FILE *fname_a)
