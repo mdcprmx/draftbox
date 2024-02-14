@@ -40,6 +40,15 @@ typedef struct {
 } grep_flags;
 
 
+void scenario_grep_start(int argc, char  **argv, grep_flags *opt_status);
+FILE funct_file_open(int argc, char **argv);
+grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char *bfr_patrn_a);
+void job_file_pattern(char *path_to_file, char* bfr_patrn_b);
+void check_file_exist(FILE *fname_a);
+void error_print();
+
+
+
 
 #endif // S21_GREP_LIB
 ////// HEADER FILE END ////////////
@@ -62,11 +71,11 @@ int main(int argc, char **argv)
 {
     if (argc > 2)
     {
-    char buffer_pattern[BUFFER_SIZE] = " ";
+    char buffer_pattern[BUFFER_SIZE] = "";
 
     grep_flags opt_state = {0};
-    opt_state = funct_args_parser(argc, argv, opt_state, buffer_pattern);
-    scenario_grep_start(argc, argv, opt_state);
+    opt_state = funct_args_parser(argc, argv, &opt_state, buffer_pattern);
+    scenario_grep_start(argc, argv, &opt_state, buffer_pattern);
     }
 
     else
@@ -77,16 +86,22 @@ int main(int argc, char **argv)
     return EXIT_SUCCESS;
 }
 
-void scenario_grep_start(int argc, char  **argv, grep_flags opt_status)
+/////////////////////////////////////////////
+/////////////////////////////////////////////
+
+void scenario_grep_start(int argc, char  **argv, grep_flags *opt_status)
 {
+    if (opt_status->e_flag == 0 && opt_status->f_flag == 0)
+    {
+        strncpy()
+    }
+
 
     while (1)
     {
     funct_file_open(argc, argv);
-    funct_grep_logic(argc, argv);
-
+    // funct_grep_logic(argc, argv);
     }
-
 }
 
 FILE funct_file_open(int argc, char **argv)
@@ -95,7 +110,7 @@ FILE funct_file_open(int argc, char **argv)
 
 }
 
-grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char bfr_patrn_a)
+grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char bfr_patrn_a[BUFFER_SIZE])
 {
     const char *SHORT_OPT = ":e:ivclnsf:ho";
     const int GETOPT_END = -1;
@@ -109,8 +124,7 @@ grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char bfr_p
             case 'e':
             printf("flag e is ON!\n");
             opts->e_flag = 1;
-            char max_length[] = BUFFER_SIZE - strlen(flag_reader);
-            strncat(bfr_patrn_a, optarg, max_length);
+            strncat(bfr_patrn_a, optarg, BUFFER_SIZE - strlen(bfr_patrn_a));
             strcat(bfr_patrn_a, "|");
             break;
 
@@ -159,10 +173,10 @@ grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char bfr_p
         }
     }
 
-    return opts;
+    return *opts;
 }
 
-job_file_pattern(char *path_to_file, char* bfr_patrn_b)
+void job_file_pattern(char *path_to_file, char* bfr_patrn_b)
 {
     FILE *fname;
     fname = NULL;
@@ -171,12 +185,41 @@ job_file_pattern(char *path_to_file, char* bfr_patrn_b)
     length_pattern = strlen(bfr_patrn_b);  // length in bytes
 
     fname = fopen(path_to_file, "r");
-    if (fname == NULL)
+    check_file_exist(fname);
+
+    int buffer_ch;
+    size_t loop_i;
+    loop_i = 0;
+    while (length_pattern < BUFFER_SIZE && (buffer_ch = fgetc(fname) != EOF))
     {
-        printf("%s: file not found\n", path_to_file);
-        return;
+        if ((buffer_ch == 10 || buffer_ch == 13) && length_pattern > 1 && bfr_patrn_b[length_pattern - 1] != '|')
+        {
+            bfr_patrn_b[length_pattern++] = '|';
+        }
+
+        if (buffer_ch != 10 && buffer_ch != 13) 
+        {
+            bfr_patrn_b[length_pattern++] = buffer_ch;
+        }
+
+    loop_i++;
     }
 
+    if (bfr_patrn_b[length_pattern -1] != '|' && length_pattern < BUFFER_SIZE)
+    {
+        bfr_patrn_b[length_pattern] = '|';
+    }
+
+    fclose(fname);
+}
+
+void check_file_exist(FILE *fname_a)
+{
+    if (fname_a == NULL)
+    {
+        printf("Error, file not found\n");
+        exit(EXIT_FAILURE); // or should it be free and then exit? hmm..
+    }
 }
 
 void error_print()
