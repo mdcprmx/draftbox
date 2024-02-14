@@ -26,6 +26,8 @@ const struct option LONG_OPT[] =
     {NULL, 0, NULL, 0}
 };
 
+// const char *SHORT_OPT = ":ie:vlcnhsf:o";
+
 typedef struct {
     int e_flag;    // pattern 
     int i_flag;    // ignore case sensetivity
@@ -40,11 +42,12 @@ typedef struct {
 } grep_flags;
 
 
-void scenario_grep_start(int argc, char  **argv, grep_flags *opt_status);
+void scenario_grep_start(int argc, char  **argv);
 FILE funct_file_open(int argc, char **argv);
-grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char *bfr_patrn_a);
-void job_file_pattern(char *path_to_file, char* bfr_patrn_b);
+grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char *bpattern_a);
+void job_file_pattern(char *path_to_file, char* pattern_b);
 void check_file_exist(FILE *fname_a);
+void check_ef_flags(char *pattern_c, char **argv, grep_flags *opts_b, int cntr_a);
 void error_print();
 
 
@@ -71,15 +74,12 @@ int main(int argc, char **argv)
 {
     if (argc > 2)
     {
-    char buffer_pattern[BUFFER_SIZE] = "";
-
-    grep_flags opt_state = {0};
-    opt_state = funct_args_parser(argc, argv, &opt_state, buffer_pattern);
-    scenario_grep_start(argc, argv, &opt_state, buffer_pattern);
+    scenario_grep_start(argc, argv);
     }
 
     else
     {
+        printf("second scenario went off\n"); // DELETE ME LATER
         error_print();
     }
 
@@ -89,13 +89,28 @@ int main(int argc, char **argv)
 /////////////////////////////////////////////
 /////////////////////////////////////////////
 
-void scenario_grep_start(int argc, char  **argv, grep_flags *opt_status)
+void scenario_grep_start(int argc, char  **argv)
 {
-    if (opt_status->e_flag == 0 && opt_status->f_flag == 0)
+    // 0 - initialization
+    char buffer_pattern[BUFFER_SIZE] = "";
+    grep_flags opt_status = {0};
+    
+    // 1 - parsing
+    opt_status = funct_args_parser(argc, argv, &opt_status, buffer_pattern);
+
+    // 2 - grep logic
+    int counter = 1;
+    printf("counter is: %d", counter); // DELETE ME LATER
+    check_ef_flags(buffer_pattern, argv, &opt_status, counter);
+
+    int number_of_files = 0;
+    while (1)
     {
-        strncpy()
+        counter++;
+        if ()
     }
 
+    
 
     while (1)
     {
@@ -106,13 +121,52 @@ void scenario_grep_start(int argc, char  **argv, grep_flags *opt_status)
 
 FILE funct_file_open(int argc, char **argv)
 {
-    
+
+
 
 }
 
-grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char bfr_patrn_a[BUFFER_SIZE])
+
+
+void check_ef_flags(char *pattern_c, char **argv, grep_flags *opts_b, int cntr_a)
 {
-    const char *SHORT_OPT = ":e:ivclnsf:ho";
+    if (opts_b->e_flag == 0 && opts_b->f_flag == 0)
+    {
+        strncpy(pattern_c, argv[optind], BUFFER_SIZE);
+    }
+
+    if (pattern_c[strlen(pattern_c) - 1] == '|')
+    {
+        pattern_c[strlen(pattern_c) - 1] == '\0';
+    }
+
+    if (!opts_b->e_flag && !opts_b->f_flag)
+    {
+        cntr_a = 2;
+        printf("counter is now: %d", cntr_a); // DELETE ME LATER
+    }
+}
+
+int check_argument_or_name(char *fname)
+{
+    const int NOT_A_FILE = 0;
+    const int IS_FILE = 1;
+    const int FLAG_EF_IS_ON = 2;
+
+    int result = 1;
+
+    if (strstr(fname))
+
+
+
+
+
+    return result;
+}
+
+grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char pattern_a[BUFFER_SIZE])
+{
+    const char *SHORT_OPT = ":ie:vlcnhsf:o";
     const int GETOPT_END = -1;
 
     int flag_reader = 0;
@@ -124,8 +178,8 @@ grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char bfr_p
             case 'e':
             printf("flag e is ON!\n");
             opts->e_flag = 1;
-            strncat(bfr_patrn_a, optarg, BUFFER_SIZE - strlen(bfr_patrn_a));
-            strcat(bfr_patrn_a, "|");
+            strncat(pattern_a, optarg, BUFFER_SIZE - strlen(pattern_a));
+            strcat(pattern_a, "|");
             break;
 
             case 'i':
@@ -151,7 +205,7 @@ grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char bfr_p
 
             case 'h':
             opts->h_flag = 1;
-            printf("flan h is ON!\n");
+            printf("flag h is ON!\n");
             break;
 
             case 's':
@@ -161,7 +215,8 @@ grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char bfr_p
 
             case 'f':
             opts->f_flag = 1;
-            job_file_pattern(optarg, bfr_patrn_a);
+            printf("flag f is ON!\n");
+            job_file_pattern(optarg, pattern_a);
             break;
 
             case 'o':
@@ -176,13 +231,13 @@ grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char bfr_p
     return *opts;
 }
 
-void job_file_pattern(char *path_to_file, char* bfr_patrn_b)
+void job_file_pattern(char *path_to_file, char* pattern_b)
 {
     FILE *fname;
     fname = NULL;
 
     size_t length_pattern;
-    length_pattern = strlen(bfr_patrn_b);  // length in bytes
+    length_pattern = strlen(pattern_b);  // length in bytes
 
     fname = fopen(path_to_file, "r");
     check_file_exist(fname);
@@ -192,22 +247,22 @@ void job_file_pattern(char *path_to_file, char* bfr_patrn_b)
     loop_i = 0;
     while (length_pattern < BUFFER_SIZE && (buffer_ch = fgetc(fname) != EOF))
     {
-        if ((buffer_ch == 10 || buffer_ch == 13) && length_pattern > 1 && bfr_patrn_b[length_pattern - 1] != '|')
+        if ((buffer_ch == 10 || buffer_ch == 13) && length_pattern > 1 && pattern_b[length_pattern - 1] != '|')
         {
-            bfr_patrn_b[length_pattern++] = '|';
+            pattern_b[length_pattern++] = '|';
         }
 
         if (buffer_ch != 10 && buffer_ch != 13) 
         {
-            bfr_patrn_b[length_pattern++] = buffer_ch;
+            pattern_b[length_pattern++] = buffer_ch;
         }
 
     loop_i++;
     }
 
-    if (bfr_patrn_b[length_pattern -1] != '|' && length_pattern < BUFFER_SIZE)
+    if (pattern_b[length_pattern -1] != '|' && length_pattern < BUFFER_SIZE)
     {
-        bfr_patrn_b[length_pattern] = '|';
+        pattern_b[length_pattern] = '|';
     }
 
     fclose(fname);
