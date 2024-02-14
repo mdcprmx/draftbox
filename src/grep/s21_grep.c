@@ -91,26 +91,27 @@ void scenario_grep_start(int argc, char  **argv, grep_flags opt_status)
 
 FILE funct_file_open(int argc, char **argv)
 {
-  
+    
 
 }
 
-grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char buffer_str)
+grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char bfr_patrn_a)
 {
     const char *SHORT_OPT = ":e:ivclnsf:ho";
+    const int GETOPT_END = -1;
 
-    int buffer_ch = 0;
-    buffer_ch = getopt_long(argc, argv, SHORT_OPT, LONG_OPT, 0);
+    int flag_reader = 0;
+    flag_reader = getopt_long(argc, argv, SHORT_OPT, LONG_OPT, 0);
     
-    while(buffer_ch != -1)
+    while((flag_reader = getopt_long(argc, argv, SHORT_OPT, LONG_OPT, 0)) != GETOPT_END)
     {
-        switch (buffer_ch) {
+        switch (flag_reader) {
             case 'e':
             printf("flag e is ON!\n");
             opts->e_flag = 1;
-            char max_length[] = BUFFER_SIZE - strlen(buffer_ch);
-            strncat(buffer_str, optarg, max_length);
-            strcat(buffer_str, "|");
+            char max_length[] = BUFFER_SIZE - strlen(flag_reader);
+            strncat(bfr_patrn_a, optarg, max_length);
+            strcat(bfr_patrn_a, "|");
             break;
 
             case 'i':
@@ -134,6 +135,25 @@ grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char buffe
             printf("flag n is ON!\n");
             opts->n_flag = 1;
 
+            case 'h':
+            opts->h_flag = 1;
+            printf("flan h is ON!\n");
+            break;
+
+            case 's':
+            opts->s_flag = 1;
+            printf("flag s is ON!\n");
+            break;
+
+            case 'f':
+            opts->f_flag = 1;
+            job_file_pattern(optarg, bfr_patrn_a);
+            break;
+
+            case 'o':
+            opts->o_flag = 1;
+            break;
+
             default:
             //error_print(); // WIP
         }
@@ -142,9 +162,26 @@ grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char buffe
     return opts;
 }
 
+job_file_pattern(char *path_to_file, char* bfr_patrn_b)
+{
+    FILE *fname;
+    fname = NULL;
+
+    size_t length_pattern;
+    length_pattern = strlen(bfr_patrn_b);  // length in bytes
+
+    fname = fopen(path_to_file, "r");
+    if (fname == NULL)
+    {
+        printf("%s: file not found\n", path_to_file);
+        return;
+    }
+
+}
+
 void error_print()
 {
-    printf("Error, correct flags are [e, i, v, c, l, n, h, s, o]\n");
+    printf("Error, correct flags are [-eivclnhso]\n");
     exit(EXIT_FAILURE);
 }
 
