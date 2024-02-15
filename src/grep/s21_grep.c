@@ -46,6 +46,7 @@ typedef struct {
 } guards;
 
 int scenario_grep_start(int argc, char  **argv);
+void funct_grep(grep_flags *opts, char pattern_d[BUFFER_SIZE], char *filename_b, int num_of_files);
 FILE funct_file_open(int argc, char **argv);
 grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char *bpattern_a);
 void job_file_pattern(char *path_to_file, char* pattern_b);
@@ -166,7 +167,7 @@ int scenario_grep_start(int argc, char  **argv)
     return EXIT_SUCCESS;    
 }
 
-funct_grep(grep_flags *opts, char pattern_d[BUFFER_SIZE], char *filename_b, int num_of_files)
+void funct_grep(grep_flags *opts, char pattern_d[BUFFER_SIZE], char *filename_b, int num_of_files)
 {
     FILE *fpointer = NULL;
 
@@ -191,8 +192,6 @@ funct_grep(grep_flags *opts, char pattern_d[BUFFER_SIZE], char *filename_b, int 
     // line 195 start
 
     int cflags = REG_EXTENDED;
-    int good_lines = 0;
-    int line_num = 1;
 
     if (opts->i_flag == 1)
     {
@@ -208,16 +207,61 @@ funct_grep(grep_flags *opts, char pattern_d[BUFFER_SIZE], char *filename_b, int 
     {
         print_filename = 1;
     }
-
-    char *grep_line = NULL;
+    
+    int good_lines = 0;
+    int line_num = 1;
+    char *string = NULL;
     size_t cap = 0;
     ssize_t bytes_length;
     guards printed = {0};
 
-    while ((bytes_length = getline(&grep_line, &cap, fpointer)) > 0)
+    while ((bytes_length = getline(&string, &cap, fpointer)) > 0)
     {
         int i = 0;
-        int eflags
+        int eflags = 0;
+        int exec = 1;
+
+        util_guards_reset(&printed);
+
+        // looks for \n and returns its position
+        if (strchr(string, '\n') == NULL)
+        {
+            strcat(string, "\n");
+        }
+
+        int nmatch = 1;
+        // refer to line 118
+        while ((((exec = regexec(&reg_expression, &string[i], nmatch, pmatch, eflags)) == 0) &&
+                         opts->v_flag == 0) || (opts->v_flag == 1 && exec))
+        {
+            if (opts->c_flag == 1 || opts->l_flag == 1)
+            {
+                break;
+            }
+            
+            if (print_filename == 1 && printed.name == 0)
+            {
+                printf("%s:", filename_b);
+                printed.name = 1;
+            }
+
+            if (opts->n_flag == 1 && printed.n_logic == 1)
+            {
+                printf("%d:", line_num);
+                printed.n_logic == 1;
+            }
+
+            if (opts->o_flag == 1 && opts->v_flag == 0)
+            {
+                // bruh, refer to line 232
+            }
+
+
+        }
+
+
+
+
     }
 
     
@@ -229,13 +273,12 @@ funct_grep(grep_flags *opts, char pattern_d[BUFFER_SIZE], char *filename_b, int 
 
 }
 
-FILE funct_file_open(int argc, char **argv)
+void util_guards_reset(guards *received_struct)
 {
-
-
-
+    received_struct->n_logic = 0;
+    received_struct->name = 0;
+    received_struct->line = 0;
 }
-
 
 void check_ef_flags(char *pattern_c, char **argv, grep_flags *opts_b, int cntr_a)
 {
