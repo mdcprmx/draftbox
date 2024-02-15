@@ -26,8 +26,6 @@ const struct option LONG_OPT[] =
     {NULL, 0, NULL, 0}
 };
 
-// const char *SHORT_OPT = ":ie:vlcnhsf:o";
-
 typedef struct {
     int e_flag;    // pattern 
     int i_flag;    // ignore case sensetivity
@@ -41,11 +39,17 @@ typedef struct {
     int o_flag;    // only matching string part print 
 } grep_flags;
 
+typedef struct {
+    int line;
+    int n_logic;
+    int name;
+} guards;
 
-void scenario_grep_start(int argc, char  **argv);
+int scenario_grep_start(int argc, char  **argv);
 FILE funct_file_open(int argc, char **argv);
 grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char *bpattern_a);
 void job_file_pattern(char *path_to_file, char* pattern_b);
+int check_argument_or_name(char *filename_a);
 void check_file_exist(FILE *fname_a);
 void check_ef_flags(char *pattern_c, char **argv, grep_flags *opts_b, int cntr_a);
 void error_print();
@@ -89,7 +93,7 @@ int main(int argc, char **argv)
 /////////////////////////////////////////////
 /////////////////////////////////////////////
 
-void scenario_grep_start(int argc, char  **argv)
+int scenario_grep_start(int argc, char  **argv)
 {
     // 0 - initialization
     char buffer_pattern[BUFFER_SIZE] = "";
@@ -99,32 +103,130 @@ void scenario_grep_start(int argc, char  **argv)
     opt_status = funct_args_parser(argc, argv, &opt_status, buffer_pattern);
 
     // 2 - grep logic
-    int counter = 1;
-    printf("counter is: %d", counter); // DELETE ME LATER
-    check_ef_flags(buffer_pattern, argv, &opt_status, counter);
+    int i = 1;
+    printf("i is: %d", i); // DELETE ME LATER
+    check_ef_flags(buffer_pattern, argv, &opt_status, i);
 
     int number_of_files = 0;
-    while (1)
+    while (i < argc)
     {
-        counter++;
+        i++;
         if (check_argument_or_name(argv[i]) == 2) // if flag E or F
         {
-            counter++;
+            i++;
             continue;
         }
 
-        if () // bruh, WIP, refer to line 33
+        if (check_argument_or_name(argv[i]) == 1)
+        {
+            number_of_files++;
+        }
+    }
 
+    const int YES = 1;
+    const int NO = 0;
+    int is_pattern = NO;
+    if (opt_status.f_flag == 0 && opt_status.e_flag == 0)
+    {
+        is_pattern = YES;
 
+        if (number_of_files > 1)
+        {
+            number_of_files--;
+        }
+    }
+
+    if (number_of_files == 0)
+    {
+        funct_grep(&opt_status, buffer_pattern, NULL, number_of_files);
+    }
+    
+    else
+    {
+        for (int k = 1; k < argc ; k++)
+        {
+            if (check_argument_or_name(argv[k]) == 2) // e or f flag is on
+            {
+                k++;
+                continue;
+            }
+
+            if (check_argument_or_name(argv[k]) == 1) // is file
+            {
+                if (is_pattern == YES) 
+                {
+                    is_pattern == NO;
+                    continue;
+                }
+                funct_grep(&opt_status, buffer_pattern, argv[k], number_of_files);
+            }
+        }
+    }
+
+    return EXIT_SUCCESS;    
+}
+
+funct_grep(grep_flags *opts, char pattern_d[BUFFER_SIZE], char *filename_b, int num_of_files)
+{
+    FILE *fpointer = NULL;
+
+    if (num_of_files == 0)
+    {
+        fpointer = stdin;
+    }
+
+    else
+    {
+        fpointer = fopen(filename_b, "r");
+        if (fpointer == NULL)
+        {
+            if (opts->l_flag == 0 && opts->s_flag == 0)
+            {
+                error_print();
+            }
+            return;
+        }
+    }
+
+    // line 195 start
+
+    int cflags = REG_EXTENDED;
+    int good_lines = 0;
+    int line_num = 1;
+
+    if (opts->i_flag == 1)
+    {
+        cflags |= REG_ICASE; // ignore case
+    }
+    // compiling regular expression (what?! the 'EXPRESSION'?! )
+    regex_t reg_expression;
+    regmatch_t pmatch[1];
+    regcomp(&reg_expression, pattern_d, cflags); // its like.. rendering with all view layers ON
+    
+    int print_filename = 0;
+    if (num_of_files > 1 && opts->h_flag == 0)
+    {
+        print_filename = 1;
+    }
+
+    char *grep_line = NULL;
+    size_t cap = 0;
+    ssize_t bytes_length;
+    guards printed = {0};
+
+    while ((bytes_length = getline(&grep_line, &cap, fpointer)) > 0)
+    {
+        int i = 0;
+        int eflags
     }
 
     
 
-    while (1)
-    {
-    funct_file_open(argc, argv);
-    // funct_grep_logic(argc, argv);
-    }
+
+
+
+
+
 }
 
 FILE funct_file_open(int argc, char **argv)
@@ -133,7 +235,6 @@ FILE funct_file_open(int argc, char **argv)
 
 
 }
-
 
 
 void check_ef_flags(char *pattern_c, char **argv, grep_flags *opts_b, int cntr_a)
@@ -151,34 +252,34 @@ void check_ef_flags(char *pattern_c, char **argv, grep_flags *opts_b, int cntr_a
     if (!opts_b->e_flag && !opts_b->f_flag)
     {
         cntr_a = 2;
-        printf("counter is now: %d", cntr_a); // DELETE ME LATER
+        printf("i is now: %d", cntr_a); // DELETE ME LATER
     }
 }
 
-int check_argument_or_name(char *fn_string)
+int check_argument_or_name(char *filename_a)
 {
     const int NOT_A_FILE = 0;
     const int IS_FILE = 1;
     const int FLAG_EF_IS_ON = 2;
 
-    int result = 1;
+    int result = IS_FILE;
 
-    if (fn_string[0] == '-')
+    if (filename_a[0] == '-')
     {
         result = NOT_A_FILE;
     }
 
-    if (strstr(fn_string, "-e") != NULL || strstr(fn_string, "-f") != NULL) 
+    if (strstr(filename_a, "-e") != NULL || strstr(filename_a, "-f") != NULL) 
     {
         result = NOT_A_FILE;
     }
 
-    if (!strcmp(fn_string, "-e") || !strcmp (fn_string, "-f"))
+    if (!strcmp(filename_a, "-e") || !strcmp (filename_a, "-f"))
     {
         result = FLAG_EF_IS_ON;
     }
 
-    if ((fn_string[strlen(fn_string) - 1] == 'f' || fn_string[strlen(fn_string) - 1] == 'e') && (fn_string[0] == '-'))
+    if ((filename_a[strlen(filename_a) - 1] == 'f' || filename_a[strlen(filename_a) - 1] == 'e') && (filename_a[0] == '-'))
     {
         result = FLAG_EF_IS_ON;
     }
@@ -255,19 +356,19 @@ grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char patte
 
 void job_file_pattern(char *path_to_file, char* pattern_b)
 {
-    FILE *fn_string;
-    fn_string = NULL;
+    FILE *filename_a;
+    filename_a = NULL;
 
     size_t length_pattern;
     length_pattern = strlen(pattern_b);  // length in bytes
 
-    fn_string = fopen(path_to_file, "r");
-    check_file_exist(fn_string);
+    filename_a = fopen(path_to_file, "r");
+    check_file_exist(filename_a);
 
     int buffer_ch;
     size_t loop_i;
     loop_i = 0;
-    while (length_pattern < BUFFER_SIZE && (buffer_ch = fgetc(fn_string) != EOF))
+    while (length_pattern < BUFFER_SIZE && (buffer_ch = fgetc(filename_a) != EOF))
     {
         if ((buffer_ch == 10 || buffer_ch == 13) && length_pattern > 1 && pattern_b[length_pattern - 1] != '|')
         {
@@ -287,7 +388,7 @@ void job_file_pattern(char *path_to_file, char* pattern_b)
         pattern_b[length_pattern] = '|';
     }
 
-    fclose(fn_string);
+    fclose(filename_a);
 }
 
 void check_file_exist(FILE *fname_a)
