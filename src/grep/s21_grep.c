@@ -155,7 +155,7 @@ void funct_grep(grep_flags *opts, char pattern_d[BUFFER_SIZE], char *filename_b,
         while ((((exec = regexec(&reg_expression, &string[i], nmatch, pmatch, eflags)) == 0) &&
                          opts->v_flag == 0) || (opts->v_flag == 1 && exec))
         {
-            if (opts->c_flag == 1 || opts->l_flag == 1)
+            if (opts->c_flag || opts->l_flag == 1)
             {
                 break;
             }
@@ -217,11 +217,11 @@ void funct_grep(grep_flags *opts, char pattern_d[BUFFER_SIZE], char *filename_b,
 
     }
 
-    if (opts->c_flag == 1 && print_filename == 1)
+    if (opts->c_flag && print_filename)
     {
-        printf("%s:%d:\n", filename_b, good_lines);
+        printf("%s:%d\n", filename_b, good_lines);
     }
-    else if (opts->c_flag == 1)
+    else if (opts->c_flag)
     {
         printf("%d\n", good_lines);
     }

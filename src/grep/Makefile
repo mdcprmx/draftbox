@@ -13,8 +13,7 @@ clear:
 	rm -rf s21_grep *.out
 
 test:
-	cd test
-	chmod 777 grep_test.sh
+	chmod +x grep_test.sh
 	./grep_test.sh
 
 clangfull: clangn clangi clangn
