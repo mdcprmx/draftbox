@@ -10,6 +10,8 @@
 #include <unistd.h>
 
 #define BUFFER_SIZE 2048
+#define YES 1
+#define NO 0
 
 const struct option LONG_OPT[] = 
 {
@@ -48,11 +50,12 @@ typedef struct {
 int scenario_grep_start(int argc, char  **argv);
 void funct_grep(grep_flags *opts, char pattern_d[BUFFER_SIZE], char *filename_b, int num_of_files);
 FILE funct_file_open(int argc, char **argv);
-grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char *bpattern_a);
+grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char pattern_a[BUFFER_SIZE]);
 void job_file_pattern(char *path_to_file, char* pattern_b);
 int check_argument_or_name(char *filename_a);
 void check_file_exist(FILE *fname_a);
 void check_ef_flags(char *pattern_c, char **argv, grep_flags *opts_b, int cntr_a);
+void util_guards_reset(guards *received_struct);
 void error_print();
 
 
@@ -60,20 +63,6 @@ void error_print();
 
 #endif // S21_GREP_LIB
 ////// HEADER FILE END ////////////
-
-
-// soo we are doing grep. 
-// with flags: -e, -i, -v, -c, -l, -n
-// only use libraries pcre or regex (what?!)
-
-// soo.. as usual. I just have to.. write grep. essentially
-// how tho? that's.. a good question!
-
-// additional quest: add support for flags -h, -s, -f, -o
-// additional ultra quest: just dont bother, I'll never be able to do it
-
-// soo.. basic layout is like that:
-// 1 - 
 
 int main(int argc, char **argv)
 {
@@ -91,17 +80,15 @@ int main(int argc, char **argv)
     return EXIT_SUCCESS;
 }
 
-/////////////////////////////////////////////
-/////////////////////////////////////////////
-
 int scenario_grep_start(int argc, char  **argv)
 {
     // 0 - initialization
-    char buffer_pattern[BUFFER_SIZE] = "";
+    char buffer_pattern[BUFFER_SIZE] = " ";
+    // char *buffer_pattern = malloc(10240);
     grep_flags opt_status = {0};
     
     // 1 - parsing
-    opt_status = funct_args_parser(argc, argv, &opt_status, buffer_pattern);
+    funct_args_parser(argc, argv, &opt_status, buffer_pattern);
 
     // 2 - grep logic
     int i = 1;
@@ -124,8 +111,6 @@ int scenario_grep_start(int argc, char  **argv)
         }
     }
 
-    const int YES = 1;
-    const int NO = 0;
     int is_pattern = NO;
     if (opt_status.f_flag == 0 && opt_status.e_flag == 0)
     {
@@ -156,7 +141,7 @@ int scenario_grep_start(int argc, char  **argv)
             {
                 if (is_pattern == YES) 
                 {
-                    is_pattern == NO;
+                    is_pattern = NO;
                     continue;
                 }
                 funct_grep(&opt_status, buffer_pattern, argv[k], number_of_files);
@@ -245,32 +230,80 @@ void funct_grep(grep_flags *opts, char pattern_d[BUFFER_SIZE], char *filename_b,
                 printed.name = 1;
             }
 
-            if (opts->n_flag == 1 && printed.n_logic == 1)
+            if (opts->n_flag == 1 && printed.n_logic == 0)
             {
                 printf("%d:", line_num);
-                printed.n_logic == 1;
+                printed.n_logic = 1;
             }
 
             if (opts->o_flag == 1 && opts->v_flag == 0)
             {
-                // bruh, refer to line 232
+                for (int match_pos = pmatch[0].rm_so; match_pos < pmatch[0].rm_eo; match_pos++)
+                {
+                    printf("%c", string[match_pos + i]);
+                }
+
+                printf("\n");
+                util_guards_reset(&printed);
+            }
+            else if (printed.line == 0)
+            {
+                printf("%s", string);
+                printed.line = 1;
             }
 
+            if (opts->v_flag)
+            {
+                break;
+            }
 
+            i = i + pmatch[0].rm_eo;
+
+            eflags |= REG_NOTBOL;
         }
 
+        line_num++;
 
+        if ((opts->v_flag == 0 && exec == 0) || (opts->v_flag == 1 && exec == 1))
+        {
+            good_lines++;
+        }
 
+        if (num_of_files == 0) 
+        {
+            fflush(fpointer);
+        }
+
+        if (opts->l_flag == 1 && exec == 0)
+        {
+            break;
+        }
 
     }
 
-    
+    if (opts->c_flag == 1 && print_filename == 1)
+    {
+        printf("%s:%d:\n", filename_b, good_lines);
+    }
+    else if (opts->c_flag == 1)
+    {
+        printf("%d\n", good_lines);
+    }
 
+    if (opts->l_flag == 1 && good_lines == 1)
+    {
+        if (num_of_files == 0)
+        {
+            printf("(standard input)\n");
+        }
+        else
+        {
+            printf("%s\n", filename_b);
+        }   
+    }
 
-
-
-
-
+    regfree(&reg_expression);
+    fclose(fpointer);
 }
 
 void util_guards_reset(guards *received_struct)
@@ -289,7 +322,7 @@ void check_ef_flags(char *pattern_c, char **argv, grep_flags *opts_b, int cntr_a
 
     if (pattern_c[strlen(pattern_c) - 1] == '|')
     {
-        pattern_c[strlen(pattern_c) - 1] == '\0';
+        pattern_c[strlen(pattern_c) - 1] = '\0';
     }
 
     if (!opts_b->e_flag && !opts_b->f_flag)
@@ -356,18 +389,22 @@ grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char patte
             case 'v':
             printf("flag v is ON!\n");
             opts->v_flag = 1;
+            break;
 
             case 'c':
             printf("flag c is ON!\n");
             opts->c_flag = 1;
+            break;
 
             case 'l':
             printf("flag l is ON!\n");
             opts->l_flag = 1;
+            break;
 
             case 'n':
             printf("flag n is ON!\n");
             opts->n_flag = 1;
+            break;
 
             case 'h':
             opts->h_flag = 1;
@@ -390,7 +427,7 @@ grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char patte
             break;
 
             default:
-            //error_print(); // WIP
+            error_print();
         }
     }
 
