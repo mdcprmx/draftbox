@@ -1,68 +1,4 @@
-////// HEADER FILE START //////////
-#ifndef S21_GREP_LIB
-#define S21_GREP_LIB
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <regex.h>
-#include <getopt.h>
-#include <unistd.h>
-
-#define BUFFER_SIZE 2048
-#define YES 1
-#define NO 0
-
-const struct option LONG_OPT[] = 
-{
-    {"ignore-case",         no_argument, NULL, 'i'},
-    {"regexp",              required_argument, NULL, 'e'},
-    {"invert-match",        no_argument, NULL, 'v'},
-    {"files-witch-matches", no_argument, NULL, 'l'},
-    {"count",               no_argument, NULL, 'c'},
-    {"line-number",         no_argument, NULL, 'n'},
-    {"no-filename",         no_argument, NULL, 'h'},
-    {"no-messages",         no_argument, NULL, 's'},
-    {"file",                required_argument, NULL, 'f'},
-    {"only-matching",       no_argument, NULL, 'o'},
-    {NULL, 0, NULL, 0}
-};
-
-typedef struct {
-    int e_flag;    // pattern 
-    int i_flag;    // ignore case sensetivity
-    int v_flag;    // invert match
-    int c_flag;    // count
-    int l_flag;    // output only matching files
-    int n_flag;    // prefix each line of output with number
-    int h_flag;    // supress filename
-    int f_flag;    // obtains patterns from FILE
-    int s_flag;    // hide error messages
-    int o_flag;    // only matching string part print 
-} grep_flags;
-
-typedef struct {
-    int line;
-    int n_logic;
-    int name;
-} guards;
-
-int scenario_grep_start(int argc, char  **argv);
-void funct_grep(grep_flags *opts, char pattern_d[BUFFER_SIZE], char *filename_b, int num_of_files);
-FILE funct_file_open(int argc, char **argv);
-grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char pattern_a[BUFFER_SIZE]);
-void job_file_pattern(char *path_to_file, char* pattern_b);
-int check_argument_or_name(char *filename_a);
-void check_file_exist(FILE *fname_a);
-void check_ef_flags(char *pattern_c, char **argv, grep_flags *opts_b, int cntr_a);
-void util_guards_reset(guards *received_struct);
-void error_print();
-
-
-
-
-#endif // S21_GREP_LIB
-////// HEADER FILE END ////////////
+#include "s21_grep.h"
 
 int main(int argc, char **argv)
 {
@@ -73,7 +9,6 @@ int main(int argc, char **argv)
 
     else
     {
-        printf("second scenario went off\n"); // DELETE ME LATER
         error_print();
     }
 
@@ -83,8 +18,7 @@ int main(int argc, char **argv)
 int scenario_grep_start(int argc, char  **argv)
 {
     // 0 - initialization
-    char buffer_pattern[BUFFER_SIZE] = " ";
-    // char *buffer_pattern = malloc(10240);
+    char buffer_pattern[BUFFER_SIZE];
     grep_flags opt_status = {0};
     
     // 1 - parsing
@@ -92,13 +26,16 @@ int scenario_grep_start(int argc, char  **argv)
 
     // 2 - grep logic
     int i = 1;
-    printf("i is: %d", i); // DELETE ME LATER
-    check_ef_flags(buffer_pattern, argv, &opt_status, i);
-
+    check_ef_flags(buffer_pattern, argv, &opt_status);
+    
     int number_of_files = 0;
-    while (i < argc)
+    if (!opt_status.e_flag && !opt_status.f_flag)
     {
-        i++;
+        i = 2;
+    }
+    
+    for(; i < argc; i++)
+    {
         if (check_argument_or_name(argv[i]) == 2) // if flag E or F
         {
             i++;
@@ -215,7 +152,6 @@ void funct_grep(grep_flags *opts, char pattern_d[BUFFER_SIZE], char *filename_b,
         }
 
         int nmatch = 1;
-        // refer to line 118
         while ((((exec = regexec(&reg_expression, &string[i], nmatch, pmatch, eflags)) == 0) &&
                          opts->v_flag == 0) || (opts->v_flag == 1 && exec))
         {
@@ -313,7 +249,7 @@ void util_guards_reset(guards *received_struct)
     received_struct->line = 0;
 }
 
-void check_ef_flags(char *pattern_c, char **argv, grep_flags *opts_b, int cntr_a)
+void check_ef_flags(char *pattern_c, char **argv, grep_flags *opts_b)
 {
     if (opts_b->e_flag == 0 && opts_b->f_flag == 0)
     {
@@ -323,12 +259,6 @@ void check_ef_flags(char *pattern_c, char **argv, grep_flags *opts_b, int cntr_a
     if (pattern_c[strlen(pattern_c) - 1] == '|')
     {
         pattern_c[strlen(pattern_c) - 1] = '\0';
-    }
-
-    if (!opts_b->e_flag && !opts_b->f_flag)
-    {
-        cntr_a = 2;
-        printf("i is now: %d", cntr_a); // DELETE ME LATER
     }
 }
 
@@ -363,62 +293,53 @@ int check_argument_or_name(char *filename_a)
     return result;
 }
 
-grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char pattern_a[BUFFER_SIZE])
+void funct_args_parser(int argc, char **argv, grep_flags *opts, char *pattern_a)
 {
-    const char *SHORT_OPT = ":ie:vlcnhsf:o";
+    const char SHORT_OPT[] = ":ie:vlcnhsf:o";
     const int GETOPT_END = -1;
 
     int flag_reader = 0;
-    flag_reader = getopt_long(argc, argv, SHORT_OPT, LONG_OPT, 0);
     
     while((flag_reader = getopt_long(argc, argv, SHORT_OPT, LONG_OPT, 0)) != GETOPT_END)
     {
+
         switch (flag_reader) {
             case 'e':
-            printf("flag e is ON!\n");
             opts->e_flag = 1;
             strncat(pattern_a, optarg, BUFFER_SIZE - strlen(pattern_a));
             strcat(pattern_a, "|");
             break;
 
             case 'i':
-            printf("flag i is ON!\n");
             opts->i_flag = 1;
             break;
 
             case 'v':
-            printf("flag v is ON!\n");
             opts->v_flag = 1;
             break;
 
             case 'c':
-            printf("flag c is ON!\n");
             opts->c_flag = 1;
             break;
 
             case 'l':
-            printf("flag l is ON!\n");
             opts->l_flag = 1;
             break;
 
             case 'n':
-            printf("flag n is ON!\n");
             opts->n_flag = 1;
             break;
 
             case 'h':
             opts->h_flag = 1;
-            printf("flag h is ON!\n");
             break;
 
             case 's':
             opts->s_flag = 1;
-            printf("flag s is ON!\n");
             break;
 
             case 'f':
             opts->f_flag = 1;
-            printf("flag f is ON!\n");
             job_file_pattern(optarg, pattern_a);
             break;
 
@@ -430,8 +351,6 @@ grep_flags funct_args_parser(int argc, char **argv, grep_flags *opts, char patte
             error_print();
         }
     }
-
-    return *opts;
 }
 
 void job_file_pattern(char *path_to_file, char* pattern_b)
