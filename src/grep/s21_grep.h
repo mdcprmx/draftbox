@@ -48,7 +48,6 @@ typedef struct {
 
 int scenario_grep_start(int argc, char  **argv);
 void funct_grep(grep_flags *opts, char pattern_d[BUFFER_SIZE], char *filename_b, int num_of_files);
-FILE funct_file_open(int argc, char **argv);
 void funct_args_parser(int argc, char **argv, grep_flags *opts, char *pattern_a);
 void job_file_pattern(char *path_to_file, char* pattern_b);
 int check_argument_or_name(char *filename_a);

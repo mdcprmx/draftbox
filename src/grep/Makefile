@@ -24,6 +24,6 @@ clangn:
 clangi:
 	clang-format -style=Google -i *.c *.h
 
-valgrind:
+memory:
 	cd test
 	valgrind --tool=memcheck --leak-check=yes ./s21_grep ayo.txt

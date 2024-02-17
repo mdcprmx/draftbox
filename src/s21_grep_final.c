@@ -18,7 +18,7 @@ int main(int argc, char **argv)
 int scenario_grep_start(int argc, char  **argv)
 {
     // 0 - initialization
-    char buffer_pattern[BUFFER_SIZE] = "";
+    char buffer_pattern[BUFFER_SIZE];
     grep_flags opt_status = {0};
     
     // 1 - parsing
@@ -111,16 +111,18 @@ void funct_grep(grep_flags *opts, char pattern_d[BUFFER_SIZE], char *filename_b,
         }
     }
 
+    // line 195 start
+
     int cflags = REG_EXTENDED;
 
     if (opts->i_flag == 1)
     {
-        cflags |= REG_ICASE; 
+        cflags |= REG_ICASE; // ignore case
     }
-
+    // compiling regular expression (what?! the 'EXPRESSION'?! )
     regex_t reg_expression;
     regmatch_t pmatch[1];
-    regcomp(&reg_expression, pattern_d, cflags);
+    regcomp(&reg_expression, pattern_d, cflags); // its like.. rendering with all view layers ON
     
     int print_filename = 0;
     if (num_of_files > 1 && opts->h_flag == 0)
@@ -132,7 +134,7 @@ void funct_grep(grep_flags *opts, char pattern_d[BUFFER_SIZE], char *filename_b,
     int line_num = 1;
     char *string = NULL;
     size_t cap = 0;
-    ssize_t bytes_length = 0;
+    ssize_t bytes_length;
     guards printed = {0};
 
     while ((bytes_length = getline(&string, &cap, fpointer)) > 0)
@@ -153,7 +155,7 @@ void funct_grep(grep_flags *opts, char pattern_d[BUFFER_SIZE], char *filename_b,
         while ((((exec = regexec(&reg_expression, &string[i], nmatch, pmatch, eflags)) == 0) &&
                          opts->v_flag == 0) || (opts->v_flag == 1 && exec))
         {
-            if (opts->c_flag || opts->l_flag == 1)
+            if (opts->c_flag == 1 || opts->l_flag == 1)
             {
                 break;
             }
@@ -176,6 +178,7 @@ void funct_grep(grep_flags *opts, char pattern_d[BUFFER_SIZE], char *filename_b,
                 {
                     printf("%c", string[match_pos + i]);
                 }
+
                 printf("\n");
                 util_guards_reset(&printed);
             }
@@ -211,13 +214,14 @@ void funct_grep(grep_flags *opts, char pattern_d[BUFFER_SIZE], char *filename_b,
         {
             break;
         }
+
     }
 
-    if (opts->c_flag && print_filename)
+    if (opts->c_flag == 1 && print_filename == 1)
     {
-        printf("%s:%d\n", filename_b, good_lines);
+        printf("%s:%d:\n", filename_b, good_lines);
     }
-    else if (opts->c_flag)
+    else if (opts->c_flag == 1)
     {
         printf("%d\n", good_lines);
     }
@@ -235,7 +239,6 @@ void funct_grep(grep_flags *opts, char pattern_d[BUFFER_SIZE], char *filename_b,
     }
 
     regfree(&reg_expression);
-    free(string);
     fclose(fpointer);
 }
 
