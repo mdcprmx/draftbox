@@ -13,8 +13,7 @@ clear:
 	rm -rf s21_cat *.out
 
 test:
-	cd test
-	chmod 777 cat_test.sh
+	chmod +x cat_test.sh
 	./cat_test.sh
 
 clangfull: clangn clangi clangn
@@ -25,6 +24,5 @@ clangn:
 clangi:
 	clang-format -style=Google -i *.c *.h
 
-valgrind:
-	cd test
-	valgrind --tool=memcheck --leak-check=yes ./s21_cat ayo.txt
+memtest:
+	valgrind --tool=memcheck --leak-check=yes ./s21_cat -nbste ayo.txt
