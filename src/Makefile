@@ -1,17 +1,17 @@
 CC = gcc
-FLAGS = -Wall -Wextra -Werror -std=c11 -pedantic
+FLAGS = -Wall -Wextra -Werror -g -c -std=c11 -pedantic
 SRC_FILE = *.c
 EXEC_FILE = 
-UNAME_S = $(shell uname -s)
+WHAT_SYSTEM = $(shell uname -s)
 
-ifeq ($(UNAME_S),Linux)
+
+ifeq ($(WHAT_SYSTEM),Linux) 
     # Code for Linux
-
 endif
-ifeq ($(UNAME_S),Darwin)
+ifeq ($(WHAT_SYSTEM),Darwin) # darwin is MACos somehow. lmao
     # Code for macOS
-
 endif
+
 
 all: clear s21_grep
 
@@ -43,12 +43,12 @@ memtest:
 
 
 # also, use prefix 's21_' for EACH function!
-# and, you can't use standard libraries (except for tests)
+# and, you can't use standard libraries for strings(except for tests)
 # and, it is FORBIDDEN to use system errors arrays (what? huh?!)
 #          (including sys_nerr, sys_errlist)
 # and..
 # "Functions must work with z-string made of single-byte characters in ASCII encoding."
-# what da hell does that mean? I dunno. 
+# what da hell does that mean? I dunno.
 # sooo... let's start this
 
 # Part 1 - basic string.h implementation
@@ -57,6 +57,25 @@ memtest:
 # Part 4 - sscanf function
 # Part 5 - huh? it just says "add special string processing functions"
 #		   BUT WHAT IS THIS?! BRRRRRRRRRRUAAAAAAAAAAAAAAAAAAAH
+
+# sooo, after video thoughts
+# 1 - git merge is not scary
+# 2 - in src you MUST add header and ".a" file (static library), 
+# 3 - add main function ONLY in one file. (verter will fail u if u have multiple mains)
+# 4 - u may add html file too
+# 5 - also, we use multiple object files cause it will take 3-6 hours to compile a huge project
+#     if it's in a single file.
+# 6 - use flag '-c' with gcc.. why tho? hmm.. cause "NO LINKING"
+# 7 - main concern is structing and compiling of library, and running tests. Not the code itslef (huh? rly?)
+# 8 - verter only executes 's21_string.a' target in Makefile
+# 9 - DONT USE STRING.H for code (obviously)
+# 10 - but use STRING.H for tests. (obviously)
+#      soo best course of actions - have 2 header files. First for code, second for tests.
+# 11 - hmm, you should write tests first, and then code.. hmm
+#      that's weird at first. But it kind-a makes sense...
+# 12 - 
+# timestamp - 01:02:00
+
 
 .PHONY all clean clear test memtest s21_string.a
 
