@@ -4,14 +4,12 @@ SRC_FILE = *.c
 EXEC_FILE = 
 WHAT_SYSTEM = $(shell uname -s)
 
-
 ifeq ($(WHAT_SYSTEM),Linux) 
     # Code for Linux
 endif
 ifeq ($(WHAT_SYSTEM),Darwin) # darwin is MACos somehow. lmao
     # Code for macOS
 endif
-
 
 all: clear s21_grep
 
@@ -76,7 +74,4 @@ memtest:
 # 12 - 
 # timestamp - 01:02:00
 
-
 .PHONY all clean clear test memtest s21_string.a
-
-
