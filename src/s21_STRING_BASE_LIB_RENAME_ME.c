@@ -12,7 +12,7 @@ void *s21_memchr(const void *line, int ch, s21_size_t line_length)
             return (void*)pointer; // forced cast to void (just to be sure)
         }
     }
-    // if something went wrong, returns NULL
+    // if char was not found returns null
     return S21_NULL;
 } 
 
@@ -34,3 +34,17 @@ void *s21_memcmp(const void *first_line, const void *second_line, s21_size_t byt
     const int IDENTICAL = 0; // well, bruh.
     return IDENTICAL;
 }
+
+// memory copy. it doesnt care about data type.
+void *s21_memcpy(void *where_to, const void *from, s21_size_t how_many_bytes)
+{
+    int cntr = 0;
+    while (how_many_bytes--)
+    {
+        ((char *)where_to)[cntr] = ((char *)from)[cntr]; // forced cast to 'char*'
+        cntr++;
+    }
+    return where_to;
+}
+
+
