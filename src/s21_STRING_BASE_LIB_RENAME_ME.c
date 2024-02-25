@@ -47,4 +47,7 @@ void *s21_memcpy(void *where_to, const void *from, s21_size_t how_many_bytes)
     return where_to;
 }
 
-
+void *s21_memmove(void *where_to, const void *from, s21_size_t how_many_bytes)
+{
+    
+}
