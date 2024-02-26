@@ -1,24 +1,26 @@
 CC = gcc
-FLAGS = -Wall -Wextra -Werror -g -c -std=c11 -pedantic $(shell pkg-config --cflags check) # needed for check.h library
-EXEC_FILE = 
+FLAGS = -Wall -Wextra -Werror -g -std=c11 -pedantic $(shell pkg-config --cflags check) # needed for check.h library
 WHAT_SYSTEM = $(shell uname -s)
 
-SRC_FILES=s21_memchr.c \ s21_memcmp.c \ s21_memmove.c \ ... # and the list goes on
-CHECK_LIBS= $(shell pkg-config --libs check )
+SRC_FILES=t1.c t2.c t3.c # and the list goes on
+
+CHECK_LIBS= $(shell pkg-config --libs check)
 OBJ_FILES= $(SRC_FILES:.c=.o) #this line searches for .o files that were in SRC_FILES
 
+# ifeq ($(WHAT_SYSTEM),Linux) 
+#     # Code for Linux
+# endif
+# ifeq ($(WHAT_SYSTEM),Darwin) # darwin is MACos somehow. lmao
+#     # Code for macOS
+# endif
 
-ifeq ($(WHAT_SYSTEM),Linux) 
-    # Code for Linux
-endif
-ifeq ($(WHAT_SYSTEM),Darwin) # darwin is MACos somehow. lmao
-    # Code for macOS
-endif
+all: clear lib
 
-all: clear s21_string.a
+lib:
+	$(CC) $(FLAGS) $(SRC_FILES) -o $(OBJ_FILES)
 
-s21_string.a:
-	$(CC) $(FLAGS) $(SRC_FILES) -o $(EXEC_FILE)
+%.o: %.c s21_string.h
+	$(CC) $(FLAGS) -c $< -o $@
 
 gcov_report:
 	# soo, this target should generate a gcov report as html page (HUH?)
@@ -27,10 +29,6 @@ clear: clean
 
 clean:
 	rm -rf *.out
-
-%.o: %.c s21_string.h
-	$(CC) $(FLAGS) -c $< -o $@
-
 test:
 	chmod +x *.sh
 	#ADD STUFF TO ME LATER

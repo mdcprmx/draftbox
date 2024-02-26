@@ -1,5 +1,6 @@
 #include "s21_string.h"
 #include "s21_STRING_BASE_LIB_RENAME_ME.c"
+#include "s21_test.h"
 
 int main()
 {
@@ -10,10 +11,11 @@ int main()
     puts(stroka1);
     puts(stroka2);
 
-    ch = s21_memchr(stroka2, 'u', 4);
+    char ch_find = 'h';
+    ch = s21_memchr(stroka2, ch_find, 8);
 
     // write(1, ch, 2);
-    printf("%c", ch);
+    printf("%s", ch);
     return 0;
 }
 
