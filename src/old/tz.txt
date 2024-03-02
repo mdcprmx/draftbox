@@ -1,0 +1,35 @@
+Task 1:
+- use -std=11 while compiling
+- use develop branch, folder src
+- use POSIX-2017 standard
+- clang format style google
+- static library named "s21_string.a"
+- with header file "s21_string.h"
+- full unit testing with "check.h" library
+- unit tests must compare it with standart functions from "string.h"
+
+- Makefile targets:
+all:
+clean:
+test:
+s21_string.a:
+gcov_report:
+
+- gcov_report must generate html file
+- use prefix "s21_", obviously
+- some weird ass line about system error arrays (dig it later)
+- follow the logic of standard string.h lib
+
+Task 2:
+- sprintf function
+- everyithing outlined in Task 1 applies to this function too
+- add support for:
+specifiers: c, d, f, s, u, %
+flags: -, +, (space)
+width desctiption: (number)
+precision desctiption: .(number)
+length desctiption: h, l
+
+Task 3...
+well yeah, just focus on these two task first, oaight?
+

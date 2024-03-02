@@ -82,6 +82,5 @@ memtest:
 # timestamp - 01:02:00
 # 
 
-#  Phony is used to force makefile use its targets, not some random file
-#  with the same file name.
+
 .PHONY: all clean clear test memtest s21_string.a
