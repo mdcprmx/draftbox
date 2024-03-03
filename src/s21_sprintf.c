@@ -264,6 +264,7 @@ s21_size_t get_width_decimal(struct_sprintf_specs *specs_e, long int num)
 // (третичная) функция для print_decimal
 int decimal_to_string(struct_sprintf_specs specs_f, long int num, char *str_to_num, s21_size_t buffer_size_a)
 {
+    // 53:20
 
 }
 
