@@ -18,17 +18,18 @@ typedef struct {
     // указывает что записывается 16-тиричное число    (sprintf("%#d",);)
 
     int width;
-    // ширина строки                                   (sprintf("%14d",);)
+    // ширина строки до точки                          (sprintf("%14d",);)
 
-    int fill_w_nulls;
+    int zero;
     // заполняет вывод нулями а не пробелами           (sprintf("%0d",);)
 
     int float_accuracy;
-    // точность вывода, если стоит точка.              (sprintf("%.3d",);)
+    // точность вывода, если стоит точка.              (sprintf("%.3d");)
 
-    char spec_length;
-    // для спцфктров ld или lf, или lld. (long)        (sprintf("%ld",);)
-    // и для спецификаторов hd, hf       (short)       (sprintf("%hd",))
+    char var_length;
+    // надо заметить что это char! не инт как все другие
+    // для спцфктров ld или lf, или lld. (long)        (sprintf("%ld");)
+    // также для спецфктрв hd, hf, итд   (short)
 
     int number_system;
     // использовать 10-тиричную или 16-рчную систему счисления
