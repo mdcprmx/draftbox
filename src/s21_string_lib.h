@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 #define S21_EXIT_SUCCESS 0
+#define S21_EXIT_FAILURE 1
 #define S21_NULL ((void*)0) // указатель на NULL, по сути это число 0 переведённое в тип void
 
 typedef unsigned long int s21_size_t;  // стандартный size_t нельзя использовать, поэтому испзуем наш

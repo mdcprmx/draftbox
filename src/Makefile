@@ -1,25 +1,34 @@
 CC = gcc
-FLAGS = -Wall -Wextra -Werror -g -c -std=c11 -pedantic $(shell pkg-config --cflags check) # needed for check.h library
-EXEC_FILE = 
+FLAGS = -Wall -Wextra -Werror -std=c11 -pedantic
+SPECIAL_FLAGS = -c -g -lm -fprofile-arcs -ftest-coverage
+# флаг -lm для math.h (если будет использоватся)
+# флаг -c чтоб создать .o файлы, не начиная процесс линковки
+# флаг -g юзается для включения отладочной информации, НУЖНО для gcov
+# флаг -fprofile-arcs вставляет дополнительный код в .o файлы, НУЖНО для gcov
+# флаг -ftest-coverage при компляции генерирует код для проверки кода, НУЖНО для gcov
+CFLAGS_CHECK = $(shell pkg-config --cflags check)
+CHECK_LIBS= $(shell pkg-config --libs check )
+
 WHAT_SYSTEM = $(shell uname -s)
 
-SRC_FILES=s21_memchr.c \ s21_memcmp.c \ s21_memmove.c \ ... # and the list goes on
-CHECK_LIBS= $(shell pkg-config --libs check )
-OBJ_FILES= $(SRC_FILES:.c=.o) #this line searches for .o files that were in SRC_FILES
+
+SRC_FILES=s21_memchr.c \ s21_memcmp.c \ s21_memmove.c \ ... # тут будут все файлы
+OBJ_FILES= $(SRC_FILES:.c=.o) # эта линия ищет *.o файлы из SRC_FILES. Но ваще можно вручную прописать
 
 
-ifeq ($(WHAT_SYSTEM),Linux) 
+ifeq ($(WHAT_SYSTEM),Linux)
     # Code for Linux
 endif
+
 ifeq ($(WHAT_SYSTEM),Darwin) # darwin is MACos somehow. lmao
     # Code for macOS
 endif
 
-all: clear s21_string.a
+all: clear s21_string.a test
 
 s21_string.a:
 	$(CC) $(FLAGS) $(SRC_FILES) -o $(EXEC_FILE)
-
+	ar rc 
 gcov_report:
 	# soo, this target should generate a gcov report as html page (HUH?)
 
@@ -27,13 +36,20 @@ clear: clean
 
 clean:
 	rm -rf *.out
+	rm -rf *.bb
+	rm -rf *.bbg
+	rm -rf *.da
+	rm -rf *.gcno
+	rm -rf *.gcda
+# флаг -fprofile-arcs создаёт эти .bb .bbg .da файлы для gcov. 
+# флаг -ftest-coverage создаёт .gcno .gcda файлы (как я понял). 
+	
 
 %.o: %.c s21_string.h
 	$(CC) $(FLAGS) -c $< -o $@
 
 test:
-	chmod +x *.sh
-	#ADD STUFF TO ME LATER
+#WIP
 
 clangfull: clangn clangi clangn
 
@@ -44,7 +60,8 @@ clangi:
 	clang-format -style=Google -i *.c *.h
 
 memtest:
-	valgrind --tool=memcheck --leak-check=yes $(EXEC_FILE) 
+#WIP
+	valgrind --tool=memcheck --leak-check=yes #WIP 
 
 
 # also, use prefix 's21_' for EACH function!
@@ -54,14 +71,12 @@ memtest:
 # and..
 # "Functions must work with z-string made of single-byte characters in ASCII encoding."
 # what da hell does that mean? I dunno.
-# sooo... let's start this
 
 # Part 1 - basic string.h implementation
 # Part 2 - half-working sprintf function too
 # Part 3 - almost-working sprintf function (with format modifiers)
 # Part 4 - sscanf function
-# Part 5 - huh? it just says "add special string processing functions"
-#		   BUT WHAT IS THIS?! BRRRRRRRRRRUAAAAAAAAAAAAAAAAAAAH
+# Part 5 - add 5 functions from си шарп (C#)
 
 # sooo, after video thoughts
 # 1 - git merge is not scary
