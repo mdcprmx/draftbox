@@ -1,0 +1,4 @@
+or not, i dont care
+flag f in grep is broken or something like that
+
+this code still passed 120% tho, so, yeah
