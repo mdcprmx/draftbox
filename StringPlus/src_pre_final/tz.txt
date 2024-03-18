@@ -1,0 +1,96 @@
+Task 1:
+- use -std=11 while compiling
+- use develop branch, folder src
+- use POSIX-2017 standard
+- clang format style google
+- static library named "s21_string.a"
+- with header file "s21_string.h"
+- full unit testing with "check.h" library
+- unit tests must compare it with standart functions from "string.h"
+
+- Makefile targets:
+all:
+clean:
+test:
+s21_string.a:
+gcov_report:
+
+- gcov_report must generate html file
+- use prefix "s21_", obviously
+- some weird ass line about system error arrays (dig it later)
+- follow the logic of standard string.h lib
+
+Task 2:
+- sprintf function
+- everyithing outlined in Task 1 applies to this function too
+- add support for:
+specifiers: c, d, f, s, u, %
+flags: -, +, (space)
+width desctiption: (number)
+precision desctiption: .(number)
+length desctiption: h, l
+
+Task 3...
+well yeah, just focus on these two task first, oaight?
+
+
+/// WARNING! ////
+use 
+srunner_set_fork_status function
+if that's not custom one
+ну кароч надо чтоб тест на память проходился и в тест кейсах,
+а не только на файлик с запуском тестов
+
+проверять malloc на null
+
+в самих функциях память не освобождаем
+
+в 5 задании нужно ставить \0 знаки конца строки, так как это си шарповские функции
+
+ну и юзать calloc
+
+при создании буффера чаров лучше всего ининлзировать его нулями
+char buff[4096] = {'\0'};
+
+может понадобиться библа math.h
+для округления правой части вывода в float-ах
+и функция modlf, которая полезна для разделения целой и дробной частей
+
+Итак чо делает sprintf?
+это кароч как printf. Но отправляет результат в указанную переменную а не на экран
+
+# also, use prefix 's21_' for EACH function!
+# and, you can't use standard libraries for strings(except for tests)
+# and, it is FORBIDDEN to use system errors arrays (what? huh?!)
+#          (including sys_nerr, sys_errlist)
+# and..
+# "Functions must work with z-string made of single-byte characters in ASCII encoding."
+# what da hell does that mean? I dunno.
+
+# Part 1 - basic string.h implementation
+# Part 2 - half-working sprintf function too
+# Part 3 - almost-working sprintf function (with format modifiers)
+# Part 4 - sscanf function
+# Part 5 - add 5 functions from си шарп (C#)
+
+# sooo, after video thoughts
+# 1 - git merge is not scary
+# 2 - in src you MUST add header and ".a" file (static library), 
+# 3 - add main function ONLY in one file. (verter will fail u if u have multiple mains)
+# 4 - u may add html file too
+# 5 - also, we use multiple object files cause it will take 3-6 hours to compile a huge project
+#     if it's in a single file.
+# 6 - use flag '-c' with gcc.. why tho? hmm.. cause "NO LINKING"
+# 7 - main concern is structing and compiling of library, and running tests. Not the code itslef (huh? rly?)
+# 8 - verter only executes 's21_string.a' target in Makefile
+# 9 - DONT USE STRING.H for code (obviously)
+# 10 - but use STRING.H for tests. (obviously)
+#      soo best course of actions - have 2 header files. First for code, second for tests.
+# 11 - hmm, you should write tests first, and then code.. hmm
+#      that's weird at first. But it kind-a makes sense...
+# 12 - 
+# timestamp - 01:02:00
+# 
+
+
+
