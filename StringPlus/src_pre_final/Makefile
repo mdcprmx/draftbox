@@ -1,3 +1,8 @@
+# тут где-то ошибка, build fail случается
+# моё предположение что надо в цели s21_string.a
+# на строке 29-ой добавить удаление обьектных файлов
+
+
 CC = gcc
 USUAL_FLAGS = -Wall -Wextra -Werror -std=c11 -pedantic
 # SPECIAL_FLAGS = -c -g -lm -fprofile-arcs -ftest-coverage
