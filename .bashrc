@@ -46,3 +46,8 @@ function parse_git_dirty {
 }
 
 export PS1="\[\e[37;45m\]@\[\e[m\]\u[\A] [\w]\[\e[30;47m\]\`parse_git_branch\`\[\e[m\]\[\e[37;45m\]@\[\e[m\] "
+
+alias dol='dolphin'
+alias spec='spectacle'
+alias oracle='virtualbox'
+

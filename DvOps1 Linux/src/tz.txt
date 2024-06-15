@@ -1,0 +1,170 @@
+sooo okay, we are doing LINUX!
+here's the list of "TO DO" stuff
+
+First, get Ubuntu Server LTS 20.04 without GUI! Like here for example
+https://ubuntu.com/download/server
+
+Second, install it on VM. Yeah, again. Do this again bruddah
+
+Third, 
+
+General ruurz for this project:
+- create develop, I guess
+- use src folder (as usual)
+- report file must be in ".md" extenstion
+- all quest parts must be specified as HEADER LEVEL 2, soo just use "##" for dem
+- списки, юзай списки в рамках одного задания (типа красиво)
+- every screenshot must have a smol NOTE! like.. saying what ta hell is on screenshot
+- crop every screenshot, so only viable part is present 
+
+Part 1:
+- install Linux
+- Ubuntu 20.04 Server LTS (no GUI version)
+- use Oracle VirtualBox
+- NO GRAPHICS ALLOWED BRUDDAH!!
+- get yo Ubuntu version using command
+  cat /etc/issue.
+- put dis screenshot in yer report.md file brah, and a small note too
+
+
+
+Part 2:
+- create a new user, someone unique.
+- add him to group "adm" (huh? does it mean root rights or what?)
+- add teh screenshot of this command call (to create a user)
+  basically just type:
+	useradd mpx
+	useradd boii
+	useradd anotherUniqueGuys
+also, here's a note, not rly related but nontheless:
+	useradd -m -d /var/www/ravi -s /bin/bash -c "IlikeTurtles" -U regular_user_group
+	-m flag creates home dir for user
+	-d specifies home directory
+	-s sets default shell (bash in this case)
+	-c adds extra info about the user (HE LIKES TURTLESS, OH MY GOD!!!)
+	-U creates a group
+soo add Screenshot of this "useradd random_user_name" command to .md file
+
+- this new user must be in da output of "cat /etc/passwd" command
+- add screenshot of this output
+
+
+
+Part 3:
+- hey, you! yes, you - READ STUFF ABOUT NETWORK INTERFACES!
+- and read about DHCP too u numnuck
+
+also
+- give name to the machine "user-1"
+- set time zone as yours
+- print names of NETWORK INTERFACES using bash command
+	for example u can use commands such as "ip addr", or "ifconfig", "nmcli device status"
+	or just browse thru sys/class/net, using:
+	ls /sys/class/net
+	
+	u can also use:
+	hwinfo --short --network
+	sudo lshw -class network -short
+	lspci | egrep -i 'network|ethernet|wireless|wi - fi'
+	  Anyways, u have lots of options my man!
+- screenshot this shit i guess..
+- give reasoning and meaning to "interface lo" being present in words in yer report
+- using another bash command get ur IP adress BUT THIS TIME - FROM DHCP server, not form yerself
+	basically just type:
+	dhclient (-v)
+	cat /var/log/messages | grep -i 'dhcp'
+	cat /var/log/syslog | grep -i 'dhcp'
+- screenshot this shoit too
+- give transcription to DHCP word as a point in .md
+- get external ip adress, and local ip adress, thru bash command (gw adress)
+	ip route 
+- screenshot this shite too
+- then
+- set static settings for ip, gw, dns. (use public DNS servers, like 1.1.1.1 or 8.8.8.8)
+- screenshot this too m8
+- then REBOOT YER VM, and check if everything that you have set in previous part still stands the same. (ip, gw, dns)
+- in report type everything that you did, there are SEVEN (7) points in this quest.
+  using text or screenshots, or both.
+- then "ping 1.1.1.1"
+- also "ping ya.ru"
+- and paste screenshots of these pings. THERE MUST BE "0% packet loss" line in pings
+
+
+Part 4:
+- update system packages to latest. just do "sudo apt update" and all that stuff
+- then try to update again, and u'll get message that there are no updates.
+- screenshot this. and add this in report, obviously
+
+
+Part 5:
+- SUDO IS THE MAGIC WORD MY FREND!
+- write what SUDO actually does
+- change OS hostname, thru custom user that u have created.
+	hostname new_name (temporary)
+	sudo hostnamectl set-hostname new_name (permanent)
+	hostnamectl (to view current hostname)
+- add user to sudoers group
+	sudo usermod -aG sudo <user>
+- screenshot this
+
+Part 6:
+- get yer timezone using
+	date 
+	date +"%Z %z"
+	timedatectl
+	cat /etc/timezone
+	timedatectl show
+- output MUST contain line "NTPSynchronized=yes"
+- screenshot this shoit
+
+Part 7:
+- bruh wtf, I must install VIM..
+- also, install NANO
+- and.. ermm.. install MCEDIT or JOE or whatever
+- basically, just install 3 text editors
+- create 3 files with corresponding name
+  and write yo name in these files (tanjaann)
+	test_vim.txt
+	test_nano.txt
+	test_whateverName.txt
+- screenshot this shoit!!!1!
+- and writea report about how did u save and leave these redactors
+- (yeah yeah, u cant quit VIM bruddah)
+- then
+- open with vim, nano, and whateverTheFockThird redactor anem is, their corresponding files, and edit them!
+	edit them so there is only "21 School 21" text
+- and after that - LEAVE WITHOUS SAVING!
+- then screenshot this shoite m8, after REDACTING, but BEFORE LEAVING WITHOUT SAVING
+- in report write how did u exit without changes
+- then
+- using three txt redactors, edit these files again (like last time) and then get used to finding functions (grep like) in these redactors
+- screenshot this shoit!
+	from every redactor with search results
+	with every command used for "change all occurances"
+
+Part 8:
+- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
