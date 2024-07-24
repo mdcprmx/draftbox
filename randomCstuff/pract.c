@@ -2,27 +2,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
-float cel_to_farenheit(float cel);
-float cel_to_kelvin(float cel);
+int mathemagic(int a, int b)
+{
+  int a_copy = a;
+  int b_copy = b;
+  int result = 0;
+
+  result = a_copy + b_copy;
+
+return (int)result;
+}
+
+#define MOSHI 5
 
 int main(int argc, char **argv) {
-  float celsius = 21;
 
-  while (celsius < 100) {
-    printf("celsius %.2f | ", celsius);
-    printf("farenheit %.2f | ", cel_to_farenheit(celsius));
-    printf("kelvin %.2f\n", cel_to_kelvin(celsius));
-
-    celsius = celsius + 10;
-  }
+  int buffer = mathemagic(5, 4);
+  printf("\nour result is %d\n", buffer);
 
   return EXIT_SUCCESS;
 }
-
-float cel_to_farenheit(float cel) {
-  cel = cel * 9 / 5 + 32;
-  return cel;
-}
-
-float cel_to_kelvin(float cel) { return cel + 273.15f; }
