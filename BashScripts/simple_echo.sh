@@ -3,7 +3,7 @@
 
 buffer=$(grep echo "$1" -c -h )
 
-if [ "$buffer" >= 500 ]; then
+if [ "$buffer" -ge 500 ]; then
     echo "that file is longer than 500 lines!"
 else
     echo "lesser than 500 bro"
